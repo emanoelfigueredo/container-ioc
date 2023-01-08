@@ -6,14 +6,14 @@ import java.util.Map;
 import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
- * <h4>A classe {@code ConfiguracaoIoT} representa a configuração utilizada pelo
+ * <h4>Classe que representa a configuração utilizada pelo
  * container IOC para mapear qual objeto deve ser instânciado quando uma
  * instância de interface for solicitada ao container IoC.</h4>
  * 
  * @author Emanoel
  * @since 1.0.0
  */
-public class ConfiguracaoIoT {
+public class ConfiguracaoIoC {
 
 	/**
 	 * Objeto do tipo {@linkplain Map} responsável por armazenar as configurações de
@@ -24,7 +24,7 @@ public class ConfiguracaoIoT {
 	/**
 	 * Construtor padrão.
 	 */
-	public ConfiguracaoIoT() {
+	public ConfiguracaoIoC() {
 		this.mapaConfiguracaoDependencia = new HashMap<Class<?>, Class<?>>();
 	}
 
@@ -34,7 +34,7 @@ public class ConfiguracaoIoT {
 	 * @param mapaConfiguracaoDependencia Um objeto do tipo {@linkplain Map} com as
 	 *                                    configurações.
 	 */
-	private ConfiguracaoIoT(Map<Class<?>, Class<?>> mapaConfiguracaoDependencia) {
+	private ConfiguracaoIoC(Map<Class<?>, Class<?>> mapaConfiguracaoDependencia) {
 		this.mapaConfiguracaoDependencia = new HashMap<Class<?>, Class<?>>();
 		this.mapaConfiguracaoDependencia.putAll(mapaConfiguracaoDependencia);
 	}
@@ -77,20 +77,20 @@ public class ConfiguracaoIoT {
 	 * 
 	 * Esse mapa deve ser obtido pelo builder.
 	 *
-	 * @param builder O builder da classe {@linkplain ConfiguracaoIoTBuilder}
+	 * @param builder O builder da classe {@linkplain ConfiguracaoIoCBuilder}
 	 */
-	public void adicionarConfiguracao(ConfiguracaoIoTBuilder builder) {
+	public void adicionarConfiguracao(ConfiguracaoIoCBuilder builder) {
 		this.mapaConfiguracaoDependencia.putAll(builder.mapaConfiguracaoDependencia);
 	}
 
 	/**
-	 * A classe {@linkplain ConfiguracaoIoTBuilder} é responsável por encapsular os
+	 * A classe {@linkplain ConfiguracaoIoCBuilder} é responsável por encapsular os
 	 * métodos de criação do mapa de configurações.
 	 * 
 	 * @author Emanoel
 	 * @since 1.0.0
 	 */
-	public static class ConfiguracaoIoTBuilder {
+	public static class ConfiguracaoIoCBuilder {
 
 		/**
 		 * Objeto {@linkplain Map} utilizado para armazenar as configurações que
@@ -102,7 +102,7 @@ public class ConfiguracaoIoT {
 		/**
 		 * Construtor do Builder.
 		 */
-		ConfiguracaoIoTBuilder() {
+		ConfiguracaoIoCBuilder() {
 			this.mapaConfiguracaoDependencia = new HashMap<Class<?>, Class<?>>();
 		}
 
@@ -135,12 +135,12 @@ public class ConfiguracaoIoT {
 		}
 
 		/**
-		 * Método responsável por construir o objeto {@linkplain ConfiguracaoIoT}.
+		 * Método responsável por construir o objeto {@linkplain ConfiguracaoIoC}.
 		 *
-		 * @return O objeto {@linkplain ConfiguracaoIoT} configurado.
+		 * @return O objeto {@linkplain ConfiguracaoIoC} configurado.
 		 */
-		public ConfiguracaoIoT build() {
-			return new ConfiguracaoIoT(this.mapaConfiguracaoDependencia);
+		public ConfiguracaoIoC build() {
+			return new ConfiguracaoIoC(this.mapaConfiguracaoDependencia);
 		}
 
 	}

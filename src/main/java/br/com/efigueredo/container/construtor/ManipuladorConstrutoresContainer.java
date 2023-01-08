@@ -40,6 +40,11 @@ public class ManipuladorConstrutoresContainer {
 		this.manipuladorConstrutoresProjeto = new ManipuladorConstrutores(classe);
 	}
 
+	/**
+	 * Método auxiliar responsável por verificar se a classe é uma interface.
+	 * @param classe
+	 * @return
+	 */
 	private boolean eInterface(Class<?> classe) {
 		return classe.isInterface();
 	}

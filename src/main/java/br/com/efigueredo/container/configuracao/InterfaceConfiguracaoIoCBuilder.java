@@ -1,12 +1,12 @@
 package br.com.efigueredo.container.configuracao;
 
-import br.com.efigueredo.container.configuracao.ConfiguracaoIoT.ConfiguracaoIoTBuilder;
+import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
 import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
  * <h4>A classe {@code InterfaceConfiguracaoIoCBuilder} é responsável por
  * fornecer ao usuário a única funcionalidade do builder da classe
- * {@linkplain ConfiguracaoIoT} necessário para configurar as dependências.
+ * {@linkplain ConfiguracaoIoC} necessário para configurar as dependências.
  * <h4>
  * 
  * Seu funcionamento consiste em encapsular o builder da classe e fornecer
@@ -17,15 +17,15 @@ import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaExce
  */
 public class InterfaceConfiguracaoIoCBuilder {
 
-	/** Objeto do tipo {@linkplain ConfiguracaoIoTBuilder} que será manipulado. */
-	private ConfiguracaoIoTBuilder builder;
+	/** Objeto do tipo {@linkplain ConfiguracaoIoCBuilder} que será manipulado. */
+	private ConfiguracaoIoCBuilder builder;
 
 	/**
 	 * Construtor padrão.
 	 * 
 	 * Instância o builder e atribui aos atributos da classe.
 	 */
-	public InterfaceConfiguracaoIoCBuilder(ConfiguracaoIoTBuilder builder) {
+	public InterfaceConfiguracaoIoCBuilder(ConfiguracaoIoCBuilder builder) {
 		this.builder = builder;
 	}
 
