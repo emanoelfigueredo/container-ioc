@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.efigueredo.container.anotacao.ConfiguracaoDependencia;
-import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
 import br.com.efigueredo.project_loader.projeto.ProjetoFactory;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 import br.com.efigueredo.project_loader.projeto.recursos.java.GerenteDeClasses;
@@ -39,26 +38,5 @@ public class ManipuladorClassesConfiguracaoDependencias {
 		}
 		return classesPelaAnotacao;
 	}
-
-	/**
-	 * Classe responsável por verificar se as classes anotadas
-	 * com @ConfiguracaoDependencia. são filhas da super classe abstrata
-	 * {@linkplain ConfiguracaoDependenciaIoC}.
-	 *
-	 * @param classe A classe a ser verificada.
-	 * @throws HerancaConfiguracaoNaoIdentificadaException Ocorrerá quando a classe
-	 *                                                     não for filha da classe
-	 *                                                     {@linkplain ConfiguracaoDependenciaIoC}.
-	 */
-	void verificarSeExtendeConfiguracaoDependenciaIoC(Class<?> classe)
-			throws HerancaConfiguracaoNaoIdentificadaException {
-		try {
-			classe.asSubclass(ConfiguracaoDependenciaIoC.class);
-		} catch (Exception e) {
-			throw new HerancaConfiguracaoNaoIdentificadaException("A classe " + classe.getName()
-					+ " não herda da classe "
-					+ "ConfiguracaoDependenciaIoC. Extenda a classe indicada e implemente o método de configuração.");
-		}
-	}
-
+	
 }

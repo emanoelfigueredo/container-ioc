@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
+import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
@@ -21,6 +23,7 @@ public class GerenteDeConfiguracoesDeDependencias {
 
 	private ManipuladorClassesConfiguracaoDependencias manipuladorClassesConfiguracao;
 	private ManipuladorMetodosConfiguracoesDependencias manipuladorMetodosConfiguracao;
+	private VerificadorConfiguracoesDependencias verificador;
 
 	/**
 	 * Construtor.
@@ -34,6 +37,7 @@ public class GerenteDeConfiguracoesDeDependencias {
 		this.configuracao = new ConfiguracaoIoC();
 		this.manipuladorClassesConfiguracao = new ManipuladorClassesConfiguracaoDependencias();
 		this.manipuladorMetodosConfiguracao = new ManipuladorMetodosConfiguracoesDependencias(this.configuracao);
+		this.verificador = new VerificadorConfiguracoesDependencias();
 	}
 
 	/**
@@ -44,8 +48,10 @@ public class GerenteDeConfiguracoesDeDependencias {
 	 * @throws PacoteInexistenteException Ocorrerá se o pacote do projeto não
 	 *                                    existir no sistema de arquivos do sistema
 	 *                                    operacional.
+	 * @throws ConfiguracaoDependenciaInterrompidaException 
+	 * @throws ConfiguracaoDependenciaInvalidaException 
 	 */
-	public ConfiguracaoIoC configurar() throws PacoteInexistenteException {
+	public ConfiguracaoIoC configurar() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		List<Class<?>> classesConfiguracao = this.obterClassesConfiguracaoDependencias();
 		this.verificarClassesObtidas(classesConfiguracao);
 		Map<Class<?>, Method> metodosConfiguracao = this.obterMetodosConfiguracaoDependencias(classesConfiguracao);
@@ -56,7 +62,7 @@ public class GerenteDeConfiguracoesDeDependencias {
 	private void verificarClassesObtidas(List<Class<?>> classes) {
 		classes.forEach(c -> {
 			try {
-				this.manipuladorClassesConfiguracao.verificarSeExtendeConfiguracaoDependenciaIoC(c);
+				this.verificador.verificarSeExtendeConfiguracaoDependenciaIoC(c);
 			} catch (HerancaConfiguracaoNaoIdentificadaException e) {
 				e.printStackTrace();
 			}
@@ -73,7 +79,7 @@ public class GerenteDeConfiguracoesDeDependencias {
 	}
 
 	private void invocarMetodosConfiguracao(Map<Class<?>, Method> metodosConfiguracao)
-			throws PacoteInexistenteException {
+			throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		this.manipuladorMetodosConfiguracao.invocarMetodos(metodosConfiguracao);
 	}
 

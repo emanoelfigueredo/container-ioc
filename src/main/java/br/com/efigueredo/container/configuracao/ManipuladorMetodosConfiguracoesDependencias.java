@@ -8,14 +8,19 @@ import java.util.Map;
 import java.util.Set;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
+import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
+import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
 public class ManipuladorMetodosConfiguracoesDependencias {
-	
+
 	private ConfiguracaoIoC configuracao;
-	
+
+	private VerificadorConfiguracoesDependencias verificador;
+
 	public ManipuladorMetodosConfiguracoesDependencias(ConfiguracaoIoC configuracao) {
 		this.configuracao = configuracao;
+		this.verificador = new VerificadorConfiguracoesDependencias();
 	}
 
 	/**
@@ -55,23 +60,40 @@ public class ManipuladorMetodosConfiguracoesDependencias {
 	 * @param classesMetodos Um {@linkplain Map} de chaves {@linkplain Class} e
 	 *                       valores {@linkplain Method} representando o método de
 	 *                       configuração de cada classe.
-	 * @throws PacoteInexistenteException Ocorrerá caso o pacote do projeto não
-	 *                                    exista no sistema operaocial.
+	 * @throws PacoteInexistenteException                   Ocorrerá caso o pacote
+	 *                                                      do projeto não exista no
+	 *                                                      sistema operaocial.
+	 * @throws ConfiguracaoDependenciaInvalidaException
+	 * @throws ConfiguracaoDependenciaInterrompidaException
 	 */
-	void invocarMetodos(Map<Class<?>, Method> classesMetodos) throws PacoteInexistenteException {
+	void invocarMetodos(Map<Class<?>, Method> classesMetodos) throws PacoteInexistenteException,
+			ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		Set<Class<?>> classes = classesMetodos.keySet();
-		classes.forEach(c -> {
-			Method m = classesMetodos.get(c);
+		for (Class<?> classe : classes) {
+			ConfiguracaoIoCBuilder builderConfigurado = this.invocarMetodoConfiguracao(classesMetodos, classe);
+			this.executarVerificacoes(builderConfigurado.getMapaConfiguracaoDependencia());
+			this.configuracao.adicionarConfiguracao(builderConfigurado);
+		}
+	}
+
+	private ConfiguracaoIoCBuilder invocarMetodoConfiguracao(Map<Class<?>, Method> classesMetodos, Class<?> classe)
+			throws ConfiguracaoDependenciaInterrompidaException {
+		try {
+			Method m = classesMetodos.get(classe);
 			ConfiguracaoIoCBuilder builder = new ConfiguracaoIoCBuilder();
 			InterfaceConfiguracaoIoCBuilder ic = new InterfaceConfiguracaoIoCBuilder(builder);
-			try {
-				m.invoke(c.getDeclaredConstructor().newInstance(), ic);
-				this.configuracao.adicionarConfiguracao(builder);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-					| InstantiationException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-			}
-		});
+			m.invoke(classe.getDeclaredConstructor().newInstance(), ic);
+			return builder;
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException
+				| NoSuchMethodException | SecurityException e) {
+			throw new ConfiguracaoDependenciaInterrompidaException(e.getCause());
+		}
 	}
-	
+
+	private void executarVerificacoes(Map<Class<?>, Class<?>> mapaConfiguracoesInseridas)
+			throws ConfiguracaoDependenciaInvalidaException {
+		this.verificador.verificarChaveDepedenciaConfigurada(mapaConfiguracoesInseridas);
+		this.verificador.verificarSeExisteClasseValorInterface(mapaConfiguracoesInseridas);
+	}
+
 }

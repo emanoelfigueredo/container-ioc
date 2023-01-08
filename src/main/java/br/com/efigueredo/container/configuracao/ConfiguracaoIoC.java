@@ -125,13 +125,11 @@ public class ConfiguracaoIoC {
 		 */
 		public void addConfiguracao(Class<?> classeChave, Class<?> classeValor)
 				throws ConfiguracaoDependenciaInvalidaException {
-			try {
-				classeValor.asSubclass(classeChave);
-				this.mapaConfiguracaoDependencia.put(classeChave, classeValor);
-			} catch (ClassCastException e) {
-				throw new ConfiguracaoDependenciaInvalidaException(
-						"A classe " + classeValor.getName() + " não é uma implementação de " + classeChave.getName());
-			}
+			this.mapaConfiguracaoDependencia.put(classeChave, classeValor);
+		}
+		
+		public Map<Class<?>, Class<?>> getMapaConfiguracaoDependencia() {
+			return mapaConfiguracaoDependencia;
 		}
 
 		/**

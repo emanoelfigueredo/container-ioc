@@ -1,6 +1,7 @@
 package br.com.efigueredo.container.configuracao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -16,6 +17,10 @@ import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo1;
 import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo3;
+import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo4;
+import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo5;
+import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
+import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
 @Tag("unitario")
@@ -65,7 +70,7 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 
 	@Test
 	public void deveriaConfigurarOObjetoConfiguracaoIoC_QuandoInvocarOsMetodosDeConfiguracoes()
-			throws PacoteInexistenteException, NoSuchMethodException, SecurityException {
+			throws PacoteInexistenteException, NoSuchMethodException, SecurityException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
 		Method metodoConfiguracao1 = ClasseConfiguracaoPrototipo1.class.getMethod("configuracao",
 				InterfaceConfiguracaoIoCBuilder.class);
@@ -83,6 +88,24 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 		assertTrue(mapaConfiguracaoDependencia.size() == 1);
 		assertTrue(mapaConfiguracaoDependencia.containsKey(List.class));
 		assertTrue(mapaConfiguracaoDependencia.containsValue(ArrayList.class));
+	}
+	
+	@Test
+	public void deveriaLancarExcecao_QuandoADependenciaValorNaoForImplementacaoDaInterfaceChave() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException, NoSuchMethodException, SecurityException {
+		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
+		Method metodoConfiguracao = ClasseConfiguracaoPrototipo4.class.getMethod("configuracao",
+				InterfaceConfiguracaoIoCBuilder.class);
+		metodosConfiguracao.put(ClasseConfiguracaoPrototipo4.class, metodoConfiguracao);
+		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.manipulador.invocarMetodos(metodosConfiguracao));
+	}
+	
+	@Test
+	public void deveriaLancarExcecao_QuandoAClasseValorForInterface() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException, NoSuchMethodException, SecurityException {
+		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
+		Method metodoConfiguracao = ClasseConfiguracaoPrototipo5.class.getMethod("configuracao",
+				InterfaceConfiguracaoIoCBuilder.class);
+		metodosConfiguracao.put(ClasseConfiguracaoPrototipo5.class, metodoConfiguracao);
+		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.manipulador.invocarMetodos(metodosConfiguracao));
 	}
 
 }

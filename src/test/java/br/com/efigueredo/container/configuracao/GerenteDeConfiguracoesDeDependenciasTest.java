@@ -1,78 +1,77 @@
 package br.com.efigueredo.container.configuracao;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Tag;
 
-import br.com.efigueredo.container.anotacao.ConfiguracaoDependencia;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo1;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo3;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipoSemSuperClasse2;
-import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
-import br.com.efigueredo.project_loader.projeto.recursos.java.GerenteDeClasses;
 
+/*
+ * Devido ao objeto Projeto somente carregar os diretórios src/main/java e src/main/resources
+ * Realizar testes de integração no diretório de testes [src/test/java] fica impossível.
+ * Para realizar os testes, siga as instruções de cada método
+ */
+
+@Tag("integracao")
 class GerenteDeConfiguracoesDeDependenciasTest {
-
-	@Mock
-	private GerenteDeClasses gerenteClasses;
-
-	@InjectMocks
+	
 	private GerenteDeConfiguracoesDeDependencias gerente;
 
 	@BeforeEach
-	public void setup() {
-		MockitoAnnotations.openMocks(this);
+	public void setup() throws PacoteInexistenteException {
+		this.gerente = new GerenteDeConfiguracoesDeDependencias();
 	}
-
-	@Test
-	void deveriaRetornarUmaLista_ContendoAClasseDeConfiguracaoPrototipo1_QuandoUsarMetodoObterClassesDeConfiguracao() throws PacoteInexistenteException {
-		when(this.gerenteClasses.getClassesPelaAnotacao(ConfiguracaoDependencia.class)).thenReturn(Arrays.asList(ClasseConfiguracaoPrototipo1.class));
-		List<Class<?>> classesConfiguracao = this.gerente.obterClassesDeConfiguracao();
-		assertTrue(classesConfiguracao.size() == 1);
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoPrototipo1.class));
-	}
-
-	@Test
-	void deveriaRetornarListaVazia_QuandoUsarMetodoObterClassesDeConfiguracao_ENaoHouverClasseDeConfiguracao() throws PacoteInexistenteException {
-		when(this.gerenteClasses.getClassesPelaAnotacao(ConfiguracaoDependencia.class)).thenReturn(new ArrayList<Class<?>>());
-		List<Class<?>> classesConfiguracao = this.gerente.obterClassesDeConfiguracao();
-		assertTrue(classesConfiguracao.isEmpty());
-	}
-
-	@Test
-	public void naoDeveriaLancarExcecao_HerancaConfiguracaoNaoIdentificadaException_SeAClasseDeConfiguracaoForFilhaDaClasse_ConfiguracaoDependenciaIoC()
-			throws HerancaConfiguracaoNaoIdentificadaException {
-		Class<?> classe = ClasseConfiguracaoPrototipo1.class;
-		assertDoesNotThrow(() -> this.gerente.verificarSeExtendeConfiguracaoDependenciaIoC(classe));
-	}
-
 	
+	/*
+	 * SITUAÇÃO => Existe classe de configuração configurada corretamente com apenas uma configuração 
+	 * de List para ArrayList
+	 * 
+	 * Para realizar esse teste copie a classe ClasseConfiguracaoPrototipo3 para algum pacote do
+	 * diretório [src/main/java].
+	 */
 	
-	@Test
-	public void deveriaLancarExcecao_HerancaConfiguracaoNaoIdentificadaException_SeAClasseDeConfiguracaoNaoForFilhaDaClasse_ConfiguracaoDependenciaIoC()
-			throws HerancaConfiguracaoNaoIdentificadaException {
-		Class<?> classe = ClasseConfiguracaoPrototipoSemSuperClasse2.class;
-		assertThrows(HerancaConfiguracaoNaoIdentificadaException.class,
-				() -> this.gerente.verificarSeExtendeConfiguracaoDependenciaIoC(classe));
-	}
-
-
-
+//	@Test
+//	public void deveriaRetornarUmObjetoDeConfiguracao_ContendoUmaConfiguracaoParaAIntefaceList() throws PacoteInexistenteException {
+//		ConfiguracaoIoC configuracao = this.gerente.configurar();
+//		assertTrue(configuracao.getMapaConfiguracaoDependencia().size() == 1);
+//		assertTrue(configuracao.getConfiguracao(List.class) == ArrayList.class);
+//	}
 	
+	/*
+	 * SITUAÇÃO => Não existe classe de configuração. O objeto de configuração deveria ter uma HashMap vazio.
+	 * 
+	 * Para realizar esse teste não utilize classes de configuração no diretório [src/main/java].
+	 */
+	
+//	@Test
+//	public void deveriaRetornarObjetoDeConfiguracaoComMapaDeConfiguracaoVazio_QuandoNaoHouverClassesDeConfiguracao() throws PacoteInexistenteException {
+//		ConfiguracaoIoC configuracao = this.gerente.configurar();
+//		assertTrue(configuracao.getMapaConfiguracaoDependencia().size() == 0);
+//	}
+	
+	/*
+	 * SITUAÇÃO => Existe classe de configuração, mas a configuração está incorreta.
+	 * Uma classe concreta que não é implementação da interface inserida.
+	 * 
+	 * Para realizar esse teste copie a classe ClasseConfiguracaoPrototipo4 para algum pacote do
+	 * diretório [src/main/java].
+	 */
+	
+//	@Test
+//	public void deveriaLancarExcecao_QuandoAClasseConfiguradaNaoForImplementacao_DaClasseChave() throws PacoteInexistenteException {
+//		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.gerente.configurar());
+//	}
+	
+	/*
+	 * SITUAÇÃO => Existe classe de configuração, mas a configuração está incorreta.
+	 * A inteface Collection está apontando para a inteface List. A classe chave não pode ser uma inteface.
+	 * 
+	 * Para realizar esse teste copie a classe ClasseConfiguracaoPrototipo5 para algum pacote do
+	 * diretório [src/main/java].
+	 */
+	
+//	@Test
+//	public void deveriaLancarExcecao_QuandoAClasseConfiguradaNaoForImplementacao_DaClasseChave() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
+//		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.gerente.configurar());
+//	}
 
 }
