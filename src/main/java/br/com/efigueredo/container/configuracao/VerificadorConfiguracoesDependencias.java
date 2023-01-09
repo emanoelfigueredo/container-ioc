@@ -7,9 +7,28 @@ import java.util.Set;
 import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
 
+/**
+ * <h4>Classe responsável por disponibilizar verificações para as classes e
+ * métodos de configuração de dependências.</h4>
+ * 
+ * @author Emanoel
+ * @since 1.0.0
+ */
 public class VerificadorConfiguracoesDependencias {
 
-	public void verificarChaveDepedenciaConfigurada(Map<Class<?>, Class<?>> mapaConfiguracoesInseridas)
+	/**
+	 * Verifique se exista alguma classe valor que não seja implementação ou filha
+	 * da classe chave.
+	 *
+	 * @param mapaConfiguracoesInseridas Mapa de configurações.
+	 * @throws ConfiguracaoDependenciaInvalidaException Ocorrerá caso a configuração
+	 *                                                  seja inválida. Podendo ser a
+	 *                                                  classe valor não sendo uma
+	 *                                                  interface ou filha da classe
+	 *                                                  chave. Ou a classe valor
+	 *                                                  sendo uma inteface.
+	 */
+	public void verificarImplementacaoOuHerancaEntreChaveValor(Map<Class<?>, Class<?>> mapaConfiguracoesInseridas)
 			throws ConfiguracaoDependenciaInvalidaException {
 		Set<Class<?>> chaves = mapaConfiguracoesInseridas.keySet();
 		for (Class<?> classeChave : chaves) {
@@ -22,17 +41,29 @@ public class VerificadorConfiguracoesDependencias {
 			}
 		}
 	}
-	
-	public void verificarSeExisteClasseValorInterface(Map<Class<?>, Class<?>> mapaConfiguracoesInseridas) throws ConfiguracaoDependenciaInvalidaException {
+
+	/**
+	 * Verifique se exista alguma classe valor que seja inteface.
+	 *
+	 * @param mapaConfiguracoesInseridas Mapa de configurações.
+	 * @throws ConfiguracaoDependenciaInvalidaException Ocorrerá caso a configuração
+	 *                                                  seja inválida. Podendo ser a
+	 *                                                  classe valor não sendo uma
+	 *                                                  interface ou filha da classe
+	 *                                                  chave. Ou a classe valor
+	 *                                                  sendo uma inteface.
+	 */
+	public void verificarSeExisteClasseValorInterface(Map<Class<?>, Class<?>> mapaConfiguracoesInseridas)
+			throws ConfiguracaoDependenciaInvalidaException {
 		Collection<Class<?>> classesValores = mapaConfiguracoesInseridas.values();
-		for(Class<?> classeValor : classesValores) {
-			if(classeValor.isInterface()) {
-				throw new ConfiguracaoDependenciaInvalidaException(
-						"A classe valor" + classeValor.getName() + " é uma inteface. As classes na posição de valor das configurações não podem ser interfaces."); 
+		for (Class<?> classeValor : classesValores) {
+			if (classeValor.isInterface()) {
+				throw new ConfiguracaoDependenciaInvalidaException("A classe valor" + classeValor.getName()
+						+ " é uma inteface. As classes na posição de valor das configurações não podem ser interfaces.");
 			}
 		}
 	}
-	
+
 	/**
 	 * Método responsável por verificar se as classes anotadas
 	 * com @ConfiguracaoDependencia. são filhas da super classe abstrata
@@ -53,5 +84,5 @@ public class VerificadorConfiguracoesDependencias {
 					+ "ConfiguracaoDependenciaIoC. Extenda a classe indicada e implemente o método de configuração.");
 		}
 	}
-	
+
 }

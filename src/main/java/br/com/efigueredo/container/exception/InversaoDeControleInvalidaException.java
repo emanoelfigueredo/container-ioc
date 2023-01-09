@@ -1,8 +1,8 @@
 package br.com.efigueredo.container.exception;
 
 /**
- * Exceção para a situação onde o processo de inversão de controle não pode ser
- * utilizado. Pode ocorrer em<br>
+ * <h4>Exceção para a situação onde o processo de inversão de controle não pode ser
+ * utilizado. Pode ocorrer em</h4><br>
  * <ul>
  * <li>Classe requerida não tem construtor padrão e construtor anotado com
  * {@linkplain Injecao}</li>
@@ -20,7 +20,7 @@ public class InversaoDeControleInvalidaException extends Exception {
 	/**
 	 * Construtor.
 	 *
-	 * @param mensagem Mensagem que descreva a situação com mais detalhes.
+	 * @param mensagem Texto que descreva a situação com mais detalhes.
 	 */
 	public InversaoDeControleInvalidaException(String mensagem) {
 		super(mensagem);

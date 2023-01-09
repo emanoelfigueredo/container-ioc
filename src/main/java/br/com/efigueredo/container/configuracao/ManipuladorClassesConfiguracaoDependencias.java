@@ -8,11 +8,25 @@ import br.com.efigueredo.project_loader.projeto.ProjetoFactory;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 import br.com.efigueredo.project_loader.projeto.recursos.java.GerenteDeClasses;
 
+/**
+ * <h4>Classe responsável por manipular todas as classes de configuração de
+ * dependências do projeto.</h4>
+ * 
+ * @author Emanoel
+ * @since 1.0.0
+ */
 public class ManipuladorClassesConfiguracaoDependencias {
 
 	/** Objeto responsável por gerenciar as classes do projeto. */
 	private GerenteDeClasses gerenteClasses;
 
+	/**
+	 * Construtor.
+	 *
+	 * @throws PacoteInexistenteException Ocorrerá se o pacote do projeto não
+	 *                                    existir no sistema de arquivos do sistema
+	 *                                    operacional.
+	 */
 	public ManipuladorClassesConfiguracaoDependencias() throws PacoteInexistenteException {
 		this.gerenteClasses = new ProjetoFactory().criarProjeto().getSRC_MAIN_JAVA().getGerenteDeClasses();
 	}
@@ -29,7 +43,6 @@ public class ManipuladorClassesConfiguracaoDependencias {
 	 * @throws PacoteInexistenteException Ocorrerá se o pacote do projeto não
 	 *                                    existir no sistema de arquivos do sistema
 	 *                                    operacional.
-	 * 
 	 */
 	List<Class<?>> obterClassesDeConfiguracao() throws PacoteInexistenteException {
 		List<Class<?>> classesPelaAnotacao = this.gerenteClasses.getClassesPelaAnotacao(ConfiguracaoDependencia.class);
@@ -38,5 +51,5 @@ public class ManipuladorClassesConfiguracaoDependencias {
 		}
 		return classesPelaAnotacao;
 	}
-	
+
 }

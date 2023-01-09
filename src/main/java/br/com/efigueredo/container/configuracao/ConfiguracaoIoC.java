@@ -6,9 +6,9 @@ import java.util.Map;
 import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
- * <h4>Classe que representa a configuração utilizada pelo
- * container IOC para mapear qual objeto deve ser instânciado quando uma
- * instância de interface for solicitada ao container IoC.</h4>
+ * <h4>Classe que representa a configuração utilizada pelo container IOC para
+ * mapear qual objeto deve ser instânciado quando uma instância de interface for
+ * solicitada ao container IoC.</h4>
  * 
  * @author Emanoel
  * @since 1.0.0
@@ -119,15 +119,21 @@ public class ConfiguracaoIoC {
 		 *                                                  ou subclasse da classe
 		 *                                                  chave.
 		 * 
-		 *                                                  exemplo: <br>classe chave =>
-		 *                                                  List.class <br>classe valor =>
-		 *                                                  String.class
+		 *                                                  exemplo: <br>
+		 *                                                  classe chave => List.class
+		 *                                                  <br>
+		 *                                                  classe valor => String.class
 		 */
 		public void addConfiguracao(Class<?> classeChave, Class<?> classeValor)
 				throws ConfiguracaoDependenciaInvalidaException {
 			this.mapaConfiguracaoDependencia.put(classeChave, classeValor);
 		}
-		
+
+		/**
+		 * Obtenha o mapa de configuração do builder.
+		 * 
+		 * @return Mapa de configuração do builder.
+		 */
 		public Map<Class<?>, Class<?>> getMapaConfiguracaoDependencia() {
 			return mapaConfiguracaoDependencia;
 		}

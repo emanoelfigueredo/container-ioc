@@ -1,8 +1,12 @@
 package br.com.efigueredo.container.configuracao;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
+import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
 /*
@@ -72,6 +76,18 @@ class GerenteDeConfiguracoesDeDependenciasTest {
 //	@Test
 //	public void deveriaLancarExcecao_QuandoAClasseConfiguradaNaoForImplementacao_DaClasseChave() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 //		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.gerente.configurar());
+//	}
+	
+	/*
+	 * SITUAÇÃO => Existe classe de configuração anotada, mas não extende a classe ConfiguracaoDependenciaIoC.
+	 * 
+	 * Para realizar esse teste copie a classe ClasseConfiguracaoPrototipoSemSuperClasse2 para algum pacote do
+	 * diretório [src/main/java].
+	 */
+	
+//	@Test
+//	public void deveriaLancarExcecao_QuandoHouverUmaClasseDeConfiguracao_QueNaoExtendaAClasse_ConfiguracaoDependenciaIoC() {
+//		assertThrows(HerancaConfiguracaoNaoIdentificadaException.class, () -> this.gerente.configurar());
 //	}
 
 }

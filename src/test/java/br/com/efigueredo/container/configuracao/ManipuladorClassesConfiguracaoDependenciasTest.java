@@ -1,6 +1,6 @@
 package br.com.efigueredo.container.configuracao;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -16,8 +16,6 @@ import org.mockito.MockitoAnnotations;
 
 import br.com.efigueredo.container.anotacao.ConfiguracaoDependencia;
 import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo1;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipoSemSuperClasse2;
-import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 import br.com.efigueredo.project_loader.projeto.recursos.java.GerenteDeClasses;
 
@@ -48,21 +46,6 @@ class ManipuladorClassesConfiguracaoDependenciasTest {
 		when(this.gerenteClasses.getClassesPelaAnotacao(ConfiguracaoDependencia.class)).thenReturn(new ArrayList<Class<?>>());
 		List<Class<?>> classesConfiguracao = this.manipulador.obterClassesDeConfiguracao();
 		assertTrue(classesConfiguracao.isEmpty());
-	}
-
-	@Test
-	public void naoDeveriaLancarExcecao_HerancaConfiguracaoNaoIdentificadaException_SeAClasseDeConfiguracaoForFilhaDaClasse_ConfiguracaoDependenciaIoC()
-			throws HerancaConfiguracaoNaoIdentificadaException {
-		Class<?> classe = ClasseConfiguracaoPrototipo1.class;
-		assertDoesNotThrow(() -> this.manipulador.verificarSeExtendeConfiguracaoDependenciaIoC(classe));
-	}
-
-	@Test
-	public void deveriaLancarExcecao_HerancaConfiguracaoNaoIdentificadaException_SeAClasseDeConfiguracaoNaoForFilhaDaClasse_ConfiguracaoDependenciaIoC()
-			throws HerancaConfiguracaoNaoIdentificadaException {
-		Class<?> classe = ClasseConfiguracaoPrototipoSemSuperClasse2.class;
-		assertThrows(HerancaConfiguracaoNaoIdentificadaException.class,
-				() -> this.manipulador.verificarSeExtendeConfiguracaoDependenciaIoC(classe));
 	}
 
 }

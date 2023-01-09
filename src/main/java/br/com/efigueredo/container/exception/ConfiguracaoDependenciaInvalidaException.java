@@ -1,8 +1,8 @@
 package br.com.efigueredo.container.exception;
 
 /**
- * Exceção para situações onde a classe valor não é subclasse ou implementação
- * da classe chave.
+ * <h4>Exceção para situações onde a classe valor não é subclasse ou implementação
+ * da classe chave.</h4>
  * 
  * @author Emanoel
  * @since 1.0.0
@@ -14,7 +14,7 @@ public class ConfiguracaoDependenciaInvalidaException extends Exception {
 	/**
 	 * Construtor.
 	 *
-	 * @param mensagem Mensagem que descreva a situação com mais detalhes.
+	 * @param mensagem Texto que descreva a situação com mais detalhes.
 	 */
 	public ConfiguracaoDependenciaInvalidaException(String mensagem) {
 		super(mensagem);

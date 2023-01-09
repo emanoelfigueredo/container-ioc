@@ -1,11 +1,8 @@
 package br.com.efigueredo.container.configuracao;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
 import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo1;
 import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo3;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo4;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo5;
 import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
 import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
@@ -32,7 +28,7 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 	@BeforeEach
 	public void setup() {
 		this.configuracao = new ConfiguracaoIoC();
-		this.manipulador = new ManipuladorMetodosConfiguracoesDependencias(this.configuracao);
+		this.manipulador = new ManipuladorMetodosConfiguracoesDependencias();
 	}
 
 	@Test
@@ -69,8 +65,9 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 	 */
 
 	@Test
-	public void deveriaConfigurarOObjetoConfiguracaoIoC_QuandoInvocarOsMetodosDeConfiguracoes()
-			throws PacoteInexistenteException, NoSuchMethodException, SecurityException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
+	public void deveriaRetornarUmBuilderConfigurado_QuandoInvocarOsMetodosDeConfiguracoes()
+			throws PacoteInexistenteException, NoSuchMethodException, SecurityException,
+			ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
 		Method metodoConfiguracao1 = ClasseConfiguracaoPrototipo1.class.getMethod("configuracao",
 				InterfaceConfiguracaoIoCBuilder.class);
@@ -80,32 +77,8 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 		metodosConfiguracao.put(ClasseConfiguracaoPrototipo1.class, metodoConfiguracao1);
 		metodosConfiguracao.put(ClasseConfiguracaoPrototipo3.class, metodoConfiguracao2);
 
-		this.manipulador.invocarMetodos(metodosConfiguracao);
-
-		Class<?> objetoConfigurado = this.configuracao.getConfiguracao(List.class);
-		assertEquals(objetoConfigurado, ArrayList.class);
-		Map<Class<?>, Class<?>> mapaConfiguracaoDependencia = this.configuracao.getMapaConfiguracaoDependencia();
-		assertTrue(mapaConfiguracaoDependencia.size() == 1);
-		assertTrue(mapaConfiguracaoDependencia.containsKey(List.class));
-		assertTrue(mapaConfiguracaoDependencia.containsValue(ArrayList.class));
-	}
-	
-	@Test
-	public void deveriaLancarExcecao_QuandoADependenciaValorNaoForImplementacaoDaInterfaceChave() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException, NoSuchMethodException, SecurityException {
-		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
-		Method metodoConfiguracao = ClasseConfiguracaoPrototipo4.class.getMethod("configuracao",
-				InterfaceConfiguracaoIoCBuilder.class);
-		metodosConfiguracao.put(ClasseConfiguracaoPrototipo4.class, metodoConfiguracao);
-		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.manipulador.invocarMetodos(metodosConfiguracao));
-	}
-	
-	@Test
-	public void deveriaLancarExcecao_QuandoAClasseValorForInterface() throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException, NoSuchMethodException, SecurityException {
-		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
-		Method metodoConfiguracao = ClasseConfiguracaoPrototipo5.class.getMethod("configuracao",
-				InterfaceConfiguracaoIoCBuilder.class);
-		metodosConfiguracao.put(ClasseConfiguracaoPrototipo5.class, metodoConfiguracao);
-		assertThrows(ConfiguracaoDependenciaInvalidaException.class, () -> this.manipulador.invocarMetodos(metodosConfiguracao));
+		List<ConfiguracaoIoCBuilder> listaBuildersConfigurados = this.manipulador.invocarMetodos(metodosConfiguracao);
+		assertTrue(listaBuildersConfigurados.size() == 2);
 	}
 
 }
