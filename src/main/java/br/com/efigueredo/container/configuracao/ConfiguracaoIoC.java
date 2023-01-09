@@ -102,7 +102,7 @@ public class ConfiguracaoIoC {
 		/**
 		 * Construtor do Builder.
 		 */
-		ConfiguracaoIoCBuilder() {
+		public ConfiguracaoIoCBuilder() {
 			this.mapaConfiguracaoDependencia = new HashMap<Class<?>, Class<?>>();
 		}
 

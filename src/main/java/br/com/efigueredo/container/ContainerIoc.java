@@ -2,14 +2,14 @@ package br.com.efigueredo.container;
 
 import java.lang.reflect.Constructor;
 
-import br.com.efigueredo.container.configuracao.ConfiguracaoIoT;
+import br.com.efigueredo.container.configuracao.ConfiguracaoIoC;
 import br.com.efigueredo.container.configuracao.GerenteDeConfiguracoesDeDependencias;
 import br.com.efigueredo.container.construtor.ManipuladorConstrutoresContainer;
 import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
 import br.com.efigueredo.container.objetos.InstanciadorDeObjetos;
-import br.com.efigueredo.container.objetos.VerificacaoLoopInjecao;
-import br.com.efigueredo.container.objetos.VerificadorDeConstrutores;
+import br.com.efigueredo.container.objetos.verificacao.VerificacaoLoopInjecao;
+import br.com.efigueredo.container.objetos.verificacao.VerificadorDeConstrutores;
 import br.com.efigueredo.project_loader.projeto.ProjetoFactory;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
@@ -34,7 +34,7 @@ public class ContainerIoc {
 	 * Objeto responsável por disponibilizar as configurações de depêndencias
 	 * inseridas pelo usuário.
 	 */
-	private ConfiguracaoIoT configuracaoDependencias;
+	private ConfiguracaoIoC configuracaoDependencias;
 
 	/**
 	 * Construtor.
