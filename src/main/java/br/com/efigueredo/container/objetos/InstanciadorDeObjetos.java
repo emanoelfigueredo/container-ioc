@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import br.com.efigueredo.container.ContainerIoc;
-import br.com.efigueredo.container.exception.IntanciacaoObjetoInterrompidaException;
+import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
 
 /**
  * <h4>Classe responsável por instânciar os objetos requeridos pelo
@@ -27,13 +27,13 @@ public class InstanciadorDeObjetos {
 	 *                                                na stack trace.
 	 */
 	public Object intanciarPorContrutorPadrao(Constructor<?> construtorPadrao)
-			throws IntanciacaoObjetoInterrompidaException {
+			throws InstanciacaoObjetoInterrompidaException {
 		construtorPadrao.setAccessible(true);
 		try {
 			return construtorPadrao.newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new IntanciacaoObjetoInterrompidaException(
+			throw new InstanciacaoObjetoInterrompidaException(
 					"A instânciação do construtor " + construtorPadrao.getName() + " foi interropida. Analise a causa.",
 					e.getCause());
 		}
@@ -54,13 +54,13 @@ public class InstanciadorDeObjetos {
 	 *                                                na stack trace.
 	 */
 	public Object instanciarPorContrutorComParametros(Constructor<?> construtor, Object[] instanciaParametros)
-			throws IntanciacaoObjetoInterrompidaException {
+			throws InstanciacaoObjetoInterrompidaException {
 		try {
 			construtor.setAccessible(true);
 			return construtor.newInstance(instanciaParametros);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new IntanciacaoObjetoInterrompidaException(
+			throw new InstanciacaoObjetoInterrompidaException(
 					"A instânciação do construtor " + construtor.getName() + " foi interropida. Analise a causa.",
 					e.getCause());
 		}

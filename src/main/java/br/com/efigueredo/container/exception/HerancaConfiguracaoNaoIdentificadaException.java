@@ -7,7 +7,7 @@ package br.com.efigueredo.container.exception;
  * @author Emanoel
  * @since 1.0.0
  */
-public class HerancaConfiguracaoNaoIdentificadaException extends Exception {
+public class HerancaConfiguracaoNaoIdentificadaException extends ContainerIocException {
 
 	private static final long serialVersionUID = 1L;
 

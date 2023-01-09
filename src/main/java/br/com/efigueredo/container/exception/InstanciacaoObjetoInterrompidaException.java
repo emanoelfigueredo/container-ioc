@@ -7,7 +7,7 @@ package br.com.efigueredo.container.exception;
  * @author Emanoel
  * @since 1.0.0
  */
-public class IntanciacaoObjetoInterrompidaException extends Exception {
+public class InstanciacaoObjetoInterrompidaException extends ContainerIocException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class IntanciacaoObjetoInterrompidaException extends Exception {
 	 * @param mensagem Texto que descreva a situação com mais detalhes.
 	 * @param causa    Causa da exceção.
 	 */
-	public IntanciacaoObjetoInterrompidaException(String mensagem, Throwable causa) {
+	public InstanciacaoObjetoInterrompidaException(String mensagem, Throwable causa) {
 		super(mensagem, causa);
 	}
 

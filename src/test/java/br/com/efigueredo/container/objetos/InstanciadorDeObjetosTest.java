@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrivadoPrototipo;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorParametrosPrivadooPrototipo;
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorParametrosPublicoPrototipo;
-import br.com.efigueredo.container.exception.IntanciacaoObjetoInterrompidaException;
+import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseConstrutorPadraoPrototipo;
+import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
 
 @Tag("unitario")
 class InstanciadorDeObjetosTest {
@@ -25,21 +25,21 @@ class InstanciadorDeObjetosTest {
 	}
 
 	@Test
-	void deveriaRetornarUmaIntancia_PeloConstrutorPadraoPublico() throws NoSuchMethodException, SecurityException, IntanciacaoObjetoInterrompidaException {
+	void deveriaRetornarUmaIntancia_PeloConstrutorPadraoPublico() throws NoSuchMethodException, SecurityException, InstanciacaoObjetoInterrompidaException {
 		Constructor<?> construtorPadrao = ClasseConstrutorPadraoPrototipo.class.getConstructor();
 		Object instancia = this.instanciador.intanciarPorContrutorPadrao(construtorPadrao);
 		assertTrue(instancia instanceof ClasseConstrutorPadraoPrototipo);
 	}
 	
 	@Test
-	void deveriaRetornarUmaIntancia_PeloConstrutorPadraoPrivado() throws NoSuchMethodException, SecurityException, IntanciacaoObjetoInterrompidaException {
+	void deveriaRetornarUmaIntancia_PeloConstrutorPadraoPrivado() throws NoSuchMethodException, SecurityException, InstanciacaoObjetoInterrompidaException {
 		Constructor<?> construtorPadrao = ClasseConstrutorPadraoPrivadoPrototipo.class.getDeclaredConstructor();
 		Object instancia = this.instanciador.intanciarPorContrutorPadrao(construtorPadrao);
 		assertTrue(instancia instanceof ClasseConstrutorPadraoPrivadoPrototipo);
 	}
 	
 	@Test
-	public void deveriaRetornarUmaInstanciaDa_ClasseDeConstrutorComParametros_Publico() throws NoSuchMethodException, SecurityException, IntanciacaoObjetoInterrompidaException {
+	public void deveriaRetornarUmaInstanciaDa_ClasseDeConstrutorComParametros_Publico() throws NoSuchMethodException, SecurityException, InstanciacaoObjetoInterrompidaException {
 		Constructor<?> construtorPadrao = ClasseConstrutorParametrosPublicoPrototipo.class.getDeclaredConstructor(String.class);
 		Object[] parametros = {"STRING PARAMETRO"};
 		Object instancia = this.instanciador.instanciarPorContrutorComParametros(construtorPadrao, parametros);
@@ -49,7 +49,7 @@ class InstanciadorDeObjetosTest {
 	}
 	
 	@Test
-	public void deveriaRetornarUmaInstanciaDa_ClasseDeConstrutorComParametros_Privado() throws NoSuchMethodException, SecurityException, IntanciacaoObjetoInterrompidaException {
+	public void deveriaRetornarUmaInstanciaDa_ClasseDeConstrutorComParametros_Privado() throws NoSuchMethodException, SecurityException, InstanciacaoObjetoInterrompidaException {
 		Constructor<?> construtorPadrao = ClasseConstrutorParametrosPrivadooPrototipo.class.getDeclaredConstructor(String.class);
 		Object[] parametros = {"STRING PARAMETRO"};
 		Object instancia = this.instanciador.instanciarPorContrutorComParametros(construtorPadrao, parametros);

@@ -6,15 +6,18 @@ import br.com.efigueredo.container.configuracao.ConfiguracaoIoC;
 import br.com.efigueredo.container.configuracao.GerenteDeConfiguracoesDeDependencias;
 import br.com.efigueredo.container.construtor.ManipuladorConstrutoresContainer;
 import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.exception.ContainerIocException;
+import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.objetos.GerenteDeIntanciacaoDosParametros;
 import br.com.efigueredo.container.objetos.InstanciadorDeObjetos;
 import br.com.efigueredo.container.objetos.verificacao.VerificacaoLoopInjecao;
 import br.com.efigueredo.container.objetos.verificacao.VerificadorDeConstrutores;
-import br.com.efigueredo.project_loader.projeto.ProjetoFactory;
+import br.com.efigueredo.container.obtencao_configuracao.GerenteDeObtencaoDeClassesConfiguradas;
 import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
 /**
- * <h4>Classe responsável por instânciar objetos por sua classe.</h4>
+ * <h4>Classe responsável por instânciar objetos pela sua classe.</h4>
  * 
  * Deve ser usado em situações onde é necessário que haja a inversão de controle
  * e injeção de depêndencias.
@@ -24,11 +27,20 @@ import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteExcep
  */
 public class ContainerIoc {
 
-	/** Objeto responsável por instânciar os objetos pelos seus contrutores. */
+	/** Objeto responsável por instânciar os objetos pelos seus construtores. */
 	private InstanciadorDeObjetos instanciador;
 
 	/** Objeto responsável por verificar os parâmetros dos construtores. */
 	private VerificadorDeConstrutores verificador;
+
+	/**
+	 * Objeto responsável por gerenciar os procedimentos de obteção da classe
+	 * configurada adequada.
+	 */
+	private GerenteDeObtencaoDeClassesConfiguradas gerenteObtencaoConfiguracao;
+
+	/** Objeto responsável por instânciar os parâmetros de construtores. */
+	private GerenteDeIntanciacaoDosParametros gerenteInstanciasParametros;
 
 	/**
 	 * Objeto responsável por disponibilizar as configurações de depêndencias
@@ -38,82 +50,109 @@ public class ContainerIoc {
 
 	/**
 	 * Construtor.
-	 * 
-	 * Nele são intânciados todos os objetos que tem funções específicas para todo o
-	 * processo de instância de um objeto por sua classe.
 	 *
-	 * @throws PacoteInexistenteException Ocorrerá se o pacote raiz não existir no
-	 *                                    sistema de arquivos do sistema
-	 *                                    operacional.
+	 * @throws ContainerIocException      Ocorrerá se houver alguma falha na
+	 *                                    configuração de dependências ou
+	 *                                    instânciação do objeto.
+	 * @throws PacoteInexistenteException Ocorrerá se o pacote raiz do projeto não
+	 *                                    for encontrado no sistema de arquivos do
+	 *                                    sistema operacional.
 	 */
-	public ContainerIoc() throws PacoteInexistenteException {
-		this.instanciador = new InstanciadorDeObjetos(this);
+	public ContainerIoc() throws ContainerIocException, PacoteInexistenteException {
+		this.instanciador = new InstanciadorDeObjetos();
 		this.verificador = new VerificadorDeConstrutores();
-		this.verificador.adicionarConfiguracao(new VerificacaoLoopInjecao());
-		GerenteDeConfiguracoesDeDependencias gerenteDeConfiguracoesDeDependencias = new GerenteDeConfiguracoesDeDependencias(
-				new ProjetoFactory().criarProjeto().getSRC_MAIN_JAVA().getGerenteDeClasses());
-		this.configuracaoDependencias = gerenteDeConfiguracoesDeDependencias.configurar();
+		this.configuracaoDependencias = new GerenteDeConfiguracoesDeDependencias().getConfiguracao();
+		this.gerenteObtencaoConfiguracao = new GerenteDeObtencaoDeClassesConfiguradas(this.configuracaoDependencias);
+		this.gerenteInstanciasParametros = new GerenteDeIntanciacaoDosParametros(this);
+		this.setupVerificacoes();
 	}
 
 	/**
-	 * Obter uma instância de um objeto por sua classe. Ou, outro que esteja
-	 * configurado para ser instânciado quando a classe chave for introduzida.
+	 * Setup para as verificacoes de construtores.
+	 *
+	 * @throws PacoteInexistenteException Ocorrerá se o pacote raiz do projeto não
+	 *                                    for encontrado no sistema de arquivos do
+	 *                                    sistema operacional.
+	 */
+	private void setupVerificacoes() throws PacoteInexistenteException {
+		this.verificador.adicionarConfiguracao(new VerificacaoLoopInjecao());
+	}
+
+	/**
+	 * Obtenha uma instância de um objeto pela sua classe.
 	 * 
 	 * Seu funcionamento consiste em unir o funcionamento de todas as classes
-	 * reponsáveis por determinadas tarefas. Primeiro se obtém a classe configurada
-	 * se ela existir. Segundo, é obtido o contrutor adequado para essa classe.
-	 * Terceiro, é verificado se os parâmetros do construtor possuem dependências
-	 * que possam gerar loop. Quarto, é realizada a instânciação do objeto.
-	 *
+	 * reponsáveis pelas tarefas necessárias para a intância de um objeto. Primeiro
+	 * se obtém a classe configurada se ela existir. Segundo, é obtido o contrutor
+	 * adequado para essa classe. Terceiro, é verificado se os parâmetros do
+	 * construtor possuem dependências que possam gerar loop. Quarto, é realizada a
+	 * instânciação do objeto.
 	 *
 	 * @param classe Objeto {@linkplain Class} para obter uma intância do mesmo.
 	 * @return Intância da classe inserida.
-	 * @throws InversaoDeControleInvalidaException Lançado quando há alguma situação
-	 *                                             em que não seja possível realizar
-	 *                                             a intanciação do objeto.
-	 * @throws ClasseIlegalParaIntanciaException   Lançado quando é requerido uma
-	 *                                             intância de interface.
+	 * @throws ContainerIocException Ocorrerá se houver alguma falha na configuração
+	 *                               de dependências ou instânciação do objeto.
 	 */
-	public Object getIntancia(Class<?> classe)
-			throws InversaoDeControleInvalidaException, ClasseIlegalParaIntanciaException {
+	public Object getInstancia(Class<?> classe) throws ContainerIocException {
 		classe = this.obterConfiguracaoDeDependencia(classe);
-		Constructor<?> construtor = new ManipuladorConstrutoresContainer(classe).getConstrutorAdequado();
+		Constructor<?> construtor = this.obterConstrutor(classe);
 		this.verificador.verificar(construtor);
-		return this.intanciar(construtor);
+		return this.instanciar(construtor);
 	}
 
 	/**
-	 * Método privado auxiliar responsável por realizar o processo de instânciação
-	 * de um objeto.
+	 * Método auxiliar privado responsável por instânciar um objeto.
 	 *
-	 * @param construtor Objeto {@linkplain Contructor} que será utilizado para a
-	 *                   instânciação.
+	 * @param construtor Construtor da classe.
 	 * @return O objeto instânciado.
+	 * @throws InstanciacaoObjetoInterrompidaException Ocorrerá se a instânciação
+	 *                                                 for interrompida. Analise a
+	 *                                                 causa na stack trace.
+	 * @throws ClasseIlegalParaIntanciaException       Lançado quando é requerido
+	 *                                                 uma intância de interface não
+	 *                                                 configurada.
+	 * @throws ContainerIocException                   Ocorrerá se houver alguma
+	 *                                                 falha na configuração de
+	 *                                                 dependências ou instânciação
+	 *                                                 do objeto.
 	 */
-	private Object intanciar(Constructor<?> construtor) {
+	private Object instanciar(Constructor<?> construtor)
+			throws InstanciacaoObjetoInterrompidaException, ClasseIlegalParaIntanciaException, ContainerIocException {
 		if (construtor.getParameterCount() == 0) {
 			return instanciador.intanciarPorContrutorPadrao(construtor);
 		}
-		Object[] intanciaDosParametros = instanciador.getIntanciaDosParametros(construtor.getParameterTypes());
+		Object[] intanciaDosParametros = gerenteInstanciasParametros
+				.getIntanciaDosParametros(construtor.getParameterTypes());
 		return instanciador.instanciarPorContrutorComParametros(construtor, intanciaDosParametros);
 	}
 
 	/**
-	 * Método auxiliar responsável por verificar se há uma classe configurada para a
-	 * classe inserida. Se houver ele retorna a classe configurada. Caso contrário,
-	 * será retornada a classe inserida.
+	 * Método auxiliar privado responsável por obter o construtor para a classe
+	 * solicitada.
 	 *
-	 * @param classe Objeto {@linkplain Class} para servir como chave para obter a
-	 *               classe configurada.
-	 * @return Se houver ele retorna a classe configurada.<br>
-	 *         Caso contrário, será retornada a classe inserida.
+	 * @param classe Classe.
+	 * @return Construtor adequado.
+	 * @throws InversaoDeControleInvalidaException Ocorrerá se houver mais de um
+	 *                                             construtor anotado, ou se não
+	 *                                             houver construtores anotados e
+	 *                                             nem o padrão.
 	 */
-	private Class<?> obterConfiguracaoDeDependencia(Class<?> classe) {
-		Class<?> classeResultado = classe;
-		if (this.configuracaoDependencias.configuracaoExiste(classe)) {
-			classeResultado = this.configuracaoDependencias.getConfiguracao(classe);
-		}
-		return classeResultado;
+	private Constructor<?> obterConstrutor(Class<?> classe) throws InversaoDeControleInvalidaException {
+		return new ManipuladorConstrutoresContainer().getConstrutorAdequado(classe);
+	}
+
+	/**
+	 * Método auxiliar privado responsável por obter a classe configurada pelo
+	 * usuário.
+	 *
+	 * @param classe Classe chave.
+	 * @return Classe valor, classe configurada.
+	 * @throws ClasseIlegalParaIntanciaException Lançado quando é requerido uma
+	 *                                           intância de interface não
+	 *                                           configurada.
+	 */
+	private Class<?> obterConfiguracaoDeDependencia(Class<?> classe) throws ClasseIlegalParaIntanciaException {
+		return this.gerenteObtencaoConfiguracao.getClasseConfigurada(classe);
 	}
 
 }

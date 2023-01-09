@@ -7,7 +7,7 @@ package br.com.efigueredo.container.exception;
  * @author Emanoel
  * @since 1.0.0
  */
-public class ConfiguracaoDependenciaInterrompidaException extends Exception {
+public class ConfiguracaoDependenciaInterrompidaException extends ContainerIocException {
 
 	private static final long serialVersionUID = 1L;
 
