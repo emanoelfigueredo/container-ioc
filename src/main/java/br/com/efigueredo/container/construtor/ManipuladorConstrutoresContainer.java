@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import br.com.efigueredo.container.anotacao.Injecao;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
 import br.com.efigueredo.project_loader.projeto.recursos.java.ManipuladorConstrutores;
 
@@ -16,38 +15,6 @@ import br.com.efigueredo.project_loader.projeto.recursos.java.ManipuladorConstru
  * @since 1.0.0
  */
 public class ManipuladorConstrutoresContainer {
-
-	/** A classe que terá seus construtores manipulados. */
-	private Class<?> classe;
-
-	/** Objeto responsável por gerenciar todos os construtores de uma classe. */
-	private ManipuladorConstrutores manipuladorConstrutoresProjeto;
-
-	/**
-	 * Construtor.
-	 *
-	 * @param classe A classe na qual terá seus construtores manipulados.
-	 * @throws ClasseIlegalParaIntanciaExpcetion
-	 */
-	public ManipuladorConstrutoresContainer(Class<?> classe) throws ClasseIlegalParaIntanciaException {
-		if (this.eInterface(classe)) {
-			throw new ClasseIlegalParaIntanciaException("O objeto Class " + classe.getName()
-					+ " representa uma interface."
-					+ " Portanto não pode ser instânciada. Crie uma configuração de depêndencia para poder utilizar interface"
-					+ " nos construtores de suas classes onde se deve injetar depêndencias.");
-		}
-		this.classe = classe;
-		this.manipuladorConstrutoresProjeto = new ManipuladorConstrutores(classe);
-	}
-
-	/**
-	 * Método auxiliar responsável por verificar se a classe é uma interface.
-	 * @param classe
-	 * @return
-	 */
-	private boolean eInterface(Class<?> classe) {
-		return classe.isInterface();
-	}
 
 	/**
 	 * Método responsável por entregar o construtor adequado de acordo com o a
@@ -65,18 +32,37 @@ public class ManipuladorConstrutoresContainer {
 	 *                                             houver construtores anotados e
 	 *                                             nem o padrão.
 	 */
-	public Constructor<?> getConstrutorAdequado() throws InversaoDeControleInvalidaException {
-		List<Constructor<?>> construtores = this.manipuladorConstrutoresProjeto.buscarConstrutoresPorAnotacao(Injecao.class);
-		if (construtores == null) {
-			return this.getConstrutorPadrao();
+	public Constructor<?> getConstrutorAdequado(Class<?> classe) throws InversaoDeControleInvalidaException {
+		List<Constructor<?>> construtoresAnotados = this.obterTodosOsConstrutoresAnotadosComInjecao(classe);
+		this.verificarSeExisteMaisDeUmConstrutorAnotado(construtoresAnotados, classe);
+		return this.obterConstrutorAdequado(construtoresAnotados, classe);
+	}
+
+	private Constructor<?> obterConstrutorAdequado(List<Constructor<?>> construtoresAnotados, Class<?> classe)
+			throws InversaoDeControleInvalidaException {
+		if (construtoresAnotados == null) {
+			return this.getConstrutorPadrao(classe);
 		}
-		if (construtores.size() > 1) {
+		return this.getConstrutorAnotado(construtoresAnotados);
+	}
+
+	private List<Constructor<?>> obterTodosOsConstrutoresAnotadosComInjecao(Class<?> classe) {
+		ManipuladorConstrutores manipuladorConstrutoresProjeto = new ManipuladorConstrutores(classe);
+		return manipuladorConstrutoresProjeto.buscarConstrutoresPorAnotacao(Injecao.class);
+	}
+
+	private Constructor<?> getConstrutorAnotado(List<Constructor<?>> construtoresAnotados) {
+		return construtoresAnotados.get(0);
+	}
+
+	private void verificarSeExisteMaisDeUmConstrutorAnotado(List<Constructor<?>> construtoresAnotados, Class<?> classe)
+			throws InversaoDeControleInvalidaException {
+		if (construtoresAnotados != null && construtoresAnotados.size() > 1) {
 			throw new InversaoDeControleInvalidaException(
-					"Mais de um construtor anotados com @Injecao na classe [" + this.classe + "]."
+					"Mais de um construtor anotados com @Injecao na classe [" + classe + "]."
 							+ " Para utilizar dos recursos de inversão de controle e injeção de dependência utilize "
 							+ "a anotação em somente um construtor na classe.");
 		}
-		return construtores.get(0);
 	}
 
 	/**
@@ -88,12 +74,12 @@ public class ManipuladorConstrutoresContainer {
 	 * @throws InversaoDeControleInvalidaException Ocorerá se não houver construtor
 	 *                                             padrão na classe.
 	 */
-	private Constructor<?> getConstrutorPadrao() throws InversaoDeControleInvalidaException {
+	private Constructor<?> getConstrutorPadrao(Class<?> classe) throws InversaoDeControleInvalidaException {
 		try {
-			return this.classe.getConstructor();
+			return classe.getConstructor();
 		} catch (NoSuchMethodException | SecurityException e) {
-			throw new InversaoDeControleInvalidaException("Não há construtor padrão nem anotados com @Injecao na "
-					+ "classe [" + this.classe.getName() + "].");
+			throw new InversaoDeControleInvalidaException(
+					"Não há construtor padrão nem anotados com @Injecao na " + "classe [" + classe.getName() + "].");
 		}
 	}
 
