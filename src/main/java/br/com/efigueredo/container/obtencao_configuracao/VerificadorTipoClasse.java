@@ -1,4 +1,4 @@
-package br.com.efigueredo.container.construtor;
+package br.com.efigueredo.container.obtencao_configuracao;
 
 public class VerificadorTipoClasse {
 

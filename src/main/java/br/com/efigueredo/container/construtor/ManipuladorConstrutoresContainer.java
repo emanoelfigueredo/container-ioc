@@ -3,29 +3,39 @@ package br.com.efigueredo.container.construtor;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import br.com.efigueredo.container.anotacao.Injecao;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
-import br.com.efigueredo.project_loader.projeto.recursos.java.ManipuladorConstrutores;
 
 /**
- * Classe responsável por manipular os construtores dos objetos que devem ser
- * instânciados.
+ * <h4>Classe responsável por manipular os construtores dos objetos que devem
+ * ser instânciados.</h4>
  * 
  * @author Emanoel
  * @since 1.0.0
  */
 public class ManipuladorConstrutoresContainer {
 
+	/** Objeto responsável por verificar os construtores. */
+	private VerificadorConstrutores verificador;
+	
+	/** Objeto responsável por obter os construtores */
+	private ObtentorConstrutores obtentor;
+
+	/**
+	 * Construtor.
+	 */
+	public ManipuladorConstrutoresContainer() {
+		this.verificador = new VerificadorConstrutores();
+		this.obtentor = new ObtentorConstrutores();
+	}
+
 	/**
 	 * Método responsável por entregar o construtor adequado de acordo com o a
 	 * classe do objeto requisitado.
 	 * 
-	 * Seu funcionamento consiste em obter todos os métodos anotados com @Injecao.
-	 * Se o resultado for null, será retornado o construtor padrão. Caso ele não
-	 * exista, será lançado uma exceção. Se houver mais de um construtor anotado,
-	 * será lançado uma exceção. Por fim, se houver apenas um construtor, ele será o
-	 * resultado.
+	 * Seu funcionamento consiste em integrar todos os métodos necessários para a
+	 * obtenção do construtor adequado.
 	 *
+	 * @param classe A classe
 	 * @return O objeto {@linkplain Constructor} adequado.
 	 * @throws InversaoDeControleInvalidaException Ocorrerá se houver mais de um
 	 *                                             construtor anotado, ou se não
@@ -33,54 +43,42 @@ public class ManipuladorConstrutoresContainer {
 	 *                                             nem o padrão.
 	 */
 	public Constructor<?> getConstrutorAdequado(Class<?> classe) throws InversaoDeControleInvalidaException {
-		List<Constructor<?>> construtoresAnotados = this.obterTodosOsConstrutoresAnotadosComInjecao(classe);
-		this.verificarSeExisteMaisDeUmConstrutorAnotado(construtoresAnotados, classe);
+		List<Constructor<?>> construtoresAnotados = this.obtentor.obterTodosOsConstrutoresAnotadosComInjecao(classe);
+		this.verificador.verificarSeExisteMaisDeUmConstrutorAnotado(construtoresAnotados, classe);
 		return this.obterConstrutorAdequado(construtoresAnotados, classe);
 	}
 
+	/**
+	 * Método privado auxiliar responsável por obter o construtor adequado de acordo
+	 * com os construtores obtidos da classe.
+	 * 
+	 * Caso a lista de construtores anotados vala null, então será executado o
+	 * processo de obtenção do construtor padrão. Caso exista consutrores anotados,
+	 * seja delegado ao método responsável a sua extração.
+	 *
+	 * @param construtoresAnotados Lista de construtores anotados com @Injecao.
+	 * @param classe               A classe dos construtores obtidos.
+	 * @return O construtor adequando.
+	 * @throws InversaoDeControleInvalidaException Ocorerá se não houver construtor
+	 *                                             padrão na classe.
+	 */
 	private Constructor<?> obterConstrutorAdequado(List<Constructor<?>> construtoresAnotados, Class<?> classe)
 			throws InversaoDeControleInvalidaException {
 		if (construtoresAnotados == null) {
-			return this.getConstrutorPadrao(classe);
+			return this.obtentor.getConstrutorPadrao(classe);
 		}
 		return this.getConstrutorAnotado(construtoresAnotados);
 	}
 
-	private List<Constructor<?>> obterTodosOsConstrutoresAnotadosComInjecao(Class<?> classe) {
-		ManipuladorConstrutores manipuladorConstrutoresProjeto = new ManipuladorConstrutores(classe);
-		return manipuladorConstrutoresProjeto.buscarConstrutoresPorAnotacao(Injecao.class);
-	}
-
+	/**
+	 * Método privado auxiliar responsável por extrair da lista de construtores o único
+	 * construtor possível.
+	 *
+	 * @param construtoresAnotados Lista de construtores anotados com @Injecao.
+	 * @return O construtor adequando.
+	 */
 	private Constructor<?> getConstrutorAnotado(List<Constructor<?>> construtoresAnotados) {
 		return construtoresAnotados.get(0);
-	}
-
-	private void verificarSeExisteMaisDeUmConstrutorAnotado(List<Constructor<?>> construtoresAnotados, Class<?> classe)
-			throws InversaoDeControleInvalidaException {
-		if (construtoresAnotados != null && construtoresAnotados.size() > 1) {
-			throw new InversaoDeControleInvalidaException(
-					"Mais de um construtor anotados com @Injecao na classe [" + classe + "]."
-							+ " Para utilizar dos recursos de inversão de controle e injeção de dependência utilize "
-							+ "a anotação em somente um construtor na classe.");
-		}
-	}
-
-	/**
-	 * Método privado auxiliar responsável por obter o construtor padrão da classe.
-	 * 
-	 * Caso ele não exista, uma exceção será lançada.
-	 *
-	 * @return Objeto {@linkplain Constructor} representando o construtor padrão.
-	 * @throws InversaoDeControleInvalidaException Ocorerá se não houver construtor
-	 *                                             padrão na classe.
-	 */
-	private Constructor<?> getConstrutorPadrao(Class<?> classe) throws InversaoDeControleInvalidaException {
-		try {
-			return classe.getConstructor();
-		} catch (NoSuchMethodException | SecurityException e) {
-			throw new InversaoDeControleInvalidaException(
-					"Não há construtor padrão nem anotados com @Injecao na " + "classe [" + classe.getName() + "].");
-		}
 	}
 
 }
