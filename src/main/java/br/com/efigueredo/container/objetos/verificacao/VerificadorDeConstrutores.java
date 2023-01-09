@@ -1,11 +1,14 @@
-package br.com.efigueredo.container.objetos;
+package br.com.efigueredo.container.objetos.verificacao;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.efigueredo.container.exception.ContainerIocException;
+
 /**
- * <h4>Classe responsável por executar as verificações para os construtores.</h4>
+ * <h4>Classe responsável por executar as verificações para os
+ * construtores.</h4>
  * 
  * @author Emanoel
  * @since 1.0.0
@@ -37,9 +40,13 @@ public class VerificadorDeConstrutores {
 	 * verificações.
 	 *
 	 * @param construtor O construtor que será verificado.
+	 * @throws ContainerIocException Ocorrerá caso haja um loop de injeção ou uma
+	 *                               inversão de controle inválida possa ocorrer.
 	 */
-	public void verificar(Constructor<?> construtor) {
-		this.verificacoes.forEach(v -> v.verificar(construtor));
+	public void verificar(Constructor<?> construtor) throws ContainerIocException {
+		for (VerificacaoConstrutor verificacao : this.verificacoes) {
+			verificacao.verificar(construtor);
+		}
 	}
 
 }

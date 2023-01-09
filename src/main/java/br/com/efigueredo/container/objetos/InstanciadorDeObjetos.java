@@ -1,14 +1,11 @@
 package br.com.efigueredo.container.objetos;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import br.com.efigueredo.container.ContainerIoc;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
-import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.exception.IntanciacaoObjetoInterrompidaException;
 
 /**
  * <h4>Classe responsável por instânciar os objetos requeridos pelo
@@ -19,34 +16,26 @@ import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException
  */
 public class InstanciadorDeObjetos {
 
-	/** Objeto {@linkplain ContainerIoc} */
-	private ContainerIoc container;
-
-	/**
-	 * Construtor.
-	 *
-	 * @param container Objeto {@linkplain ContainerIoc} que está instânciando um
-	 *                  objeto utilizando um objeto dessa classe.
-	 */
-	public InstanciadorDeObjetos(ContainerIoc container) {
-		this.container = container;
-	}
-
 	/**
 	 * Obtenha uma instância de um objeto pelo seu construtor padrão.
 	 *
 	 * @param construtorPadrao Objeto {@linkplain Constructor} para que seja
 	 *                         utilizado na instanciação.
 	 * @return Uma intância do objeto pelo seu construtor.
+	 * @throws IntanciacaoObjetoInterrompidaException Ocorrerá se a instânciação for
+	 *                                                interrompida. Analise a causa
+	 *                                                na stack trace.
 	 */
-	public Object intanciarPorContrutorPadrao(Constructor<?> construtorPadrao) {
+	public Object intanciarPorContrutorPadrao(Constructor<?> construtorPadrao)
+			throws IntanciacaoObjetoInterrompidaException {
 		construtorPadrao.setAccessible(true);
 		try {
 			return construtorPadrao.newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new IntanciacaoObjetoInterrompidaException(
+					"A instânciação do construtor " + construtorPadrao.getName() + " foi interropida. Analise a causa.",
+					e.getCause());
 		}
 	}
 
@@ -60,39 +49,21 @@ public class InstanciadorDeObjetos {
 	 * @param instanciaParametros Um {@linkplain Array} contendo uma intância de
 	 *                            todos os seus parâmetros.
 	 * @return O objeto instânciado.
+	 * @throws IntanciacaoObjetoInterrompidaException Ocorrerá se a instânciação for
+	 *                                                interrompida. Analise a causa
+	 *                                                na stack trace.
 	 */
-	public Object instanciarPorContrutorComParametros(Constructor<?> construtor, Object[] instanciaParametros) {
-		construtor.setAccessible(true);
+	public Object instanciarPorContrutorComParametros(Constructor<?> construtor, Object[] instanciaParametros)
+			throws IntanciacaoObjetoInterrompidaException {
 		try {
+			construtor.setAccessible(true);
 			return construtor.newInstance(instanciaParametros);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new IntanciacaoObjetoInterrompidaException(
+					"A instânciação do construtor " + construtor.getName() + " foi interropida. Analise a causa.",
+					e.getCause());
 		}
-	}
-
-	/**
-	 * Obtenha um {@linkplain Array} de instâncias de objetos {@linkplain Class}
-	 * contidos num Array, representando os parâmetros.
-	 *
-	 * @param classes {@linkplain Array} de objetos {@linkplain Class}.
-	 * @return {@linkplain Array} de intâncias das classes inseridas.
-	 */
-	public Object[] getIntanciaDosParametros(Class<?>[] classes) {
-		List<Class<?>> listaClasses = Arrays.asList(classes);
-		List<Object> objetosParametros = new ArrayList<Object>();
-		listaClasses.forEach(c -> {
-			Object intancia;
-			try {
-				intancia = this.container.getIntancia(c);
-				objetosParametros.add(intancia);
-			} catch (IllegalArgumentException | InversaoDeControleInvalidaException
-					| ClasseIlegalParaIntanciaException e) {
-				e.printStackTrace();
-			}
-		});
-		return objetosParametros.toArray();
 	}
 
 }

@@ -8,7 +8,7 @@ package br.com.efigueredo.container.exception;
  * @author Emanoel
  * @since 1.0.0
  */
-public class LoopDeInjecaoDependenciaException extends Exception {
+public class LoopDeInjecaoDependenciaException extends ExcecaoVerificacao {
 
 	private static final long serialVersionUID = 1L;
 

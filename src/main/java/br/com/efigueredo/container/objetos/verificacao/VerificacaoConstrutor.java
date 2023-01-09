@@ -1,6 +1,8 @@
-package br.com.efigueredo.container.objetos;
+package br.com.efigueredo.container.objetos.verificacao;
 
 import java.lang.reflect.Constructor;
+
+import br.com.efigueredo.container.exception.ContainerIocException;
 
 /**
  * <h4>Interface que especifica uma verificação para os construtores manipulados.</h4>
@@ -17,6 +19,6 @@ public interface VerificacaoConstrutor {
 	 *
 	 * @param construtor Objeto {@linkplain Constructor} para ser verificado.
 	 */
-	void verificar(Constructor<?> construtor);
+	void verificar(Constructor<?> construtor) throws ContainerIocException;
 
 }
