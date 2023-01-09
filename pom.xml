@@ -1,10 +1,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.com.efigueredo</groupId>
+	<groupId>br.com.emanoelfigueredo</groupId>
 	<artifactId>container-ioc</artifactId>
 	<version>1.0.0</version>
 	<name>Container IOC</name>
 	<description>Biblioteca para implementar a inversão de controle e injeção de dependências.</description>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Emanoel Figueredo Apache Maven Packages</name>
+          <url>https://maven.pkg.github.com/emanoelfigueredo/container-ioc</url>
+		</repository>
+	</distributionManagement>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<developers>
+		<developer>
+			<id>efigueredo</id>
+			<name>Emanoel Figueredo</name>
+			<email>emanoel.figueredo.1@gmail.com</email>
+			<organization>com.github.emanoelfigueredo</organization>
+			<organizationUrl>https://github.com/emanoelfigueredo</organizationUrl>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.emanoelfigueredo</groupId>
@@ -37,7 +62,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>Project Loader</finalName>
+		<finalName>Container IoC</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
