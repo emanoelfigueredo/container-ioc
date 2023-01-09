@@ -1,10 +1,6 @@
-<h4 align="center"> 
-    :construction:  Projeto em melhoria de testes automatizados  :construction:
-</h4>
-
 ![banner](https://user-images.githubusercontent.com/121516171/211205818-3d938699-7b96-426e-9f32-bbe552eef757.png)
 <p align="center">
-<img src="https://img.shields.io/badge/Testes-18%20sucessos%2C%200%20falhas-green?style=for-the-badge&logo=appveyor">
+<img src="https://img.shields.io/badge/Testes-40%20sucessos%2C%200%20falhas-green?style=for-the-badge&logo=appveyor">
 <img src="https://img.shields.io/badge/Build-Sucesso-yellow?style=for-the-badge&logo=appveyor">
 <img src="https://img.shields.io/badge/Licen%C3%A7a-MIT-yellowgreen?style=for-the-badge&logo=appveyor">
 <img src="https://img.shields.io/badge/Vers%C3%A3o-1.0.0-blue?style=for-the-badge&logo=appveyor">
