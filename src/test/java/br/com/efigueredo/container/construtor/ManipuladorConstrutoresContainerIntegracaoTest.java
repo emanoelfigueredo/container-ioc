@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseConstrutorPadraoPrototipo;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseDuploConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseSemConstrutorValido;
+import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
+import br.com.efigueredo.container.construtor.prototipo.ClasseDuploConstrutorAnotado;
+import br.com.efigueredo.container.construtor.prototipo.ClasseSemConstrutorValido;
 import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
 

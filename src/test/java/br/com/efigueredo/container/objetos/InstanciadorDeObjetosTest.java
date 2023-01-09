@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrivadoPrototipo;
+import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorParametrosPrivadooPrototipo;
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorParametrosPublicoPrototipo;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseConstrutorPadraoPrototipo;
 import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
 
 @Tag("unitario")

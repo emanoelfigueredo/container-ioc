@@ -16,9 +16,9 @@ import org.mockito.MockitoAnnotations;
 
 import br.com.efigueredo.container.anotacao.Injecao;
 import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseConstrutorPadraoPrototipo;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseDuploConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipos_teste_geral_integrado.ClasseSemConstrutorValido;
+import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
+import br.com.efigueredo.container.construtor.prototipo.ClasseDuploConstrutorAnotado;
+import br.com.efigueredo.container.construtor.prototipo.ClasseSemConstrutorValido;
 import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
 import br.com.efigueredo.project_loader.projeto.recursos.java.ManipuladorConstrutores;
