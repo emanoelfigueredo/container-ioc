@@ -1,6 +1,6 @@
 package br.com.efigueredo.container.configuracao;
 
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
  * </h4>A classe {@code ConfiguracaoDependenciaIoC} é reponsável por especificar

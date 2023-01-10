@@ -24,7 +24,7 @@ public class VerificadorConstrutores {
 	 *                                             houver construtores anotados e
 	 *                                             nem o padrão.
 	 */
-	public void verificarSeExisteMaisDeUmConstrutorAnotado(List<Constructor<?>> construtoresAnotados, Class<?> classe)
+	public void verificarSeExisteMaisDeUmConstrutorAnotado(List<Constructor> construtoresAnotados, Class<?> classe)
 			throws InversaoDeControleInvalidaException {
 		if (construtoresAnotados != null && construtoresAnotados.size() > 1) {
 			throw new InversaoDeControleInvalidaException(

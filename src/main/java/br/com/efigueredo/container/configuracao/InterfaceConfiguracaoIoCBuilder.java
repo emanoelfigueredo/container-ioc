@@ -1,7 +1,7 @@
 package br.com.efigueredo.container.configuracao;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
  * <h4>A classe {@code InterfaceConfiguracaoIoCBuilder} é responsável por
@@ -35,12 +35,17 @@ public class InterfaceConfiguracaoIoCBuilder {
 	 * Seu funcionamento consiste em receber objetos do tipo {@linkplain Class} que
 	 * representem a chave e o valor das configurações.
 	 *
-	 * @param classeChave O objeto do tipo {@linkplain Class} que representa a
-	 *                    chave para obter a classe desejada.
+	 * @param classeChave O objeto do tipo {@linkplain Class} que representa a chave
+	 *                    para obter a classe desejada.
 	 * @param classeValor O objeto do tipo {@linkplain Class} que representa a
 	 *                    classe desejada.
 	 * @return O próprio objeto InterfaceConfiguracaoIoCBuilder.
-	 * @throws ConfiguracaoDependenciaInvalidaException
+	 * @throws ConfiguracaoDependenciaInvalidaException Ocorrerá caso a configuração
+	 *                                                  seja inválida. Podendo ser a
+	 *                                                  classe valor não sendo uma
+	 *                                                  interface ou filha da classe
+	 *                                                  chave. Ou a classe valor
+	 *                                                  sendo uma inteface.
 	 */
 	public InterfaceConfiguracaoIoCBuilder adicionarConfiguracao(Class<?> classeChave, Class<?> classeValor)
 			throws ConfiguracaoDependenciaInvalidaException {

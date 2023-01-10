@@ -1,50 +1,48 @@
 package br.com.efigueredo.container.configuracao;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
-import br.com.efigueredo.container.anotacao.ConfiguracaoDependencia;
-import br.com.efigueredo.container.configuracao.prototipos.ClasseConfiguracaoPrototipo1;
-import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
-import br.com.efigueredo.project_loader.projeto.recursos.java.GerenteDeClasses;
+import br.com.efigueredo.container.exception.ContainerIocException;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorreta.ClasseConfiguracaoComConfiguracaoCorreta;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorretaSemConfiguracao.ClasseConfiguracaoCorretaSemConfiguracao;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoIncorretaImplementacao.ClasseConfiguracaoComConfiguracaoIncorretaImplementacao;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoIncorretaValorInterface.ClasseConfiguracaoComConfiguracaoIncorretaValorInterface;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoSemHerancaClasseConfigura.ClasseConfiguracaoSemSuperClasseConfiguracaoDependenciaIoC;
 
-@Tag("unitario")
+@Tag("unitaruio")
 class ManipuladorClassesConfiguracaoDependenciasTest {
 
-	@Mock
-	private GerenteDeClasses gerenteClasses;
-
-	@InjectMocks
 	private ManipuladorClassesConfiguracaoDependencias manipulador;
 
-	@BeforeEach
-	public void setUp() throws Exception {
-		MockitoAnnotations.openMocks(this);
+	public void setUp(String pacoteRaiz) throws ContainerIocException {
+		Reflections reflections = new Reflections(pacoteRaiz, new TypeAnnotationsScanner(), new SubTypesScanner(false));
+		this.manipulador = new ManipuladorClassesConfiguracaoDependencias(reflections);
 	}
 
 	@Test
-	public void deveriaRetornarUmaLista_ContendoAClasseDeConfiguracaoPrototipo1_QuandoUsarMetodoObterClassesDeConfiguracao() throws PacoteInexistenteException {
-		when(this.gerenteClasses.getClassesPelaAnotacao(ConfiguracaoDependencia.class)).thenReturn(Arrays.asList(ClasseConfiguracaoPrototipo1.class));
-		List<Class<?>> classesConfiguracao = this.manipulador.obterClassesDeConfiguracao();
-		assertTrue(classesConfiguracao.size() == 1);
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoPrototipo1.class));
+	public void deveriaRetornarUmaLista_ContentoAs5ClassesDeConfiguracoes_NoPacoteDePrototipos() throws ContainerIocException {
+		this.setUp("br.com.efigueredo.container.prototipos_com_configuracoes");
+		List<Class<?>> classesConfiguracao = this.manipulador.obterClassesAnotadasComConfiguracaoDependencia();
+		assertTrue(classesConfiguracao.size() == 5);
+		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoCorretaSemConfiguracao.class));
+		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoComConfiguracaoCorreta.class));
+		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoComConfiguracaoIncorretaImplementacao.class));
+		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoComConfiguracaoIncorretaValorInterface.class));
+		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoSemSuperClasseConfiguracaoDependenciaIoC.class));
 	}
 
 	@Test
-	public void deveriaRetornarListaVazia_QuandoUsarMetodoObterClassesDeConfiguracao_ENaoHouverClasseDeConfiguracao() throws PacoteInexistenteException {
-		when(this.gerenteClasses.getClassesPelaAnotacao(ConfiguracaoDependencia.class)).thenReturn(new ArrayList<Class<?>>());
-		List<Class<?>> classesConfiguracao = this.manipulador.obterClassesDeConfiguracao();
+	public void deveriaRetornarListaVazia_QuandoUsarMetodoObterClassesDeConfiguracao_ENaoHouverClasseDeConfiguracao_PacoteSemClassesConfiguracoes() throws ContainerIocException {
+		this.setUp("br.com.efigueredo.container.prototipos_sem_configuracoes");
+		List<Class<?>> classesConfiguracao = this.manipulador.obterClassesAnotadasComConfiguracaoDependencia();
 		assertTrue(classesConfiguracao.isEmpty());
 	}
 

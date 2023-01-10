@@ -4,11 +4,13 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.reflections.Reflections;
+
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
-import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
-import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInterrompidaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
+import br.com.efigueredo.container.configuracao.exception.HerancaConfiguracaoNaoIdentificadaException;
 
 /**
  * <h4>Classe responsável por gerenciar os objetos encarregados das funções
@@ -39,13 +41,11 @@ public class GerenteDeConfiguracoesDeDependencias {
 	/**
 	 * Construtor.
 	 *
-	 * @throws PacoteInexistenteException Ocorrerá caso o pacote raiz do projeto não
-	 *                                    esteja no sistema de arquivos do sistema
-	 *                                    operacial.
+	 * @param reflections Objeto responsável pela reflexão de todo o projeto.
 	 */
-	public GerenteDeConfiguracoesDeDependencias() throws PacoteInexistenteException {
+	public GerenteDeConfiguracoesDeDependencias(Reflections reflections) {
 		this.configuracao = new ConfiguracaoIoC();
-		this.manipuladorClassesConfiguracao = new ManipuladorClassesConfiguracaoDependencias();
+		this.manipuladorClassesConfiguracao = new ManipuladorClassesConfiguracaoDependencias(reflections);
 		this.manipuladorMetodosConfiguracao = new ManipuladorMetodosConfiguracoesDependencias();
 		this.verificador = new VerificadorConfiguracoesDependencias();
 	}
@@ -57,29 +57,18 @@ public class GerenteDeConfiguracoesDeDependencias {
 	 * configuração derivados de vários objetos responsáveis.
 	 *
 	 * @return Objeto {@linkplain ConfiguracaoIoT} pronto para uso.
-	 * @throws PacoteInexistenteException                   Ocorrerá se o pacote do
-	 *                                                      projeto não existir no
-	 *                                                      sistema de arquivos do
-	 *                                                      sistema operacional.
-	 * @throws ConfiguracaoDependenciaInvalidaException     Ocorrerá caso a
-	 *                                                      configuração seja
-	 *                                                      inválida. Podendo ser a
-	 *                                                      classe valor não sendo
-	 *                                                      uma interface ou filha
-	 *                                                      da classe chave. Ou a
-	 *                                                      classe valor sendo uma
-	 *                                                      inteface.
-	 * @throws ConfiguracaoDependenciaInterrompidaException Ocorrerá se houver algum
-	 *                                                      erro de reflexão na
-	 *                                                      configuração.
-	 * @throws HerancaConfiguracaoNaoIdentificadaException  Ocorrerá se houver uma
-	 *                                                      classe de configuração
-	 *                                                      que não extenda a classe
-	 *                                                      {@linkplain ConfiguracaoIoC}.
+	 * @throws ConfiguracaoDependenciaException Pode ocorrer as exceções
+	 *                                          <ul>
+	 *                                          <li>{@linkplain HerancaConfiguracaoNaoIdentificadaException}
+	 *                                          </li>
+	 *                                          <li>{@linkplain ConfiguracaoDependenciaInvalidaException}
+	 *                                          </li>
+	 *                                          <li>{@linkplain ConfiguracaoDependenciaInterrompidaException}
+	 *                                          </li>
+	 * 
+	 *                                          </ul>
 	 */
-	public ConfiguracaoIoC getConfiguracao()
-			throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException,
-			ConfiguracaoDependenciaInterrompidaException, HerancaConfiguracaoNaoIdentificadaException {
+	public ConfiguracaoIoC getConfiguracao() throws ConfiguracaoDependenciaException {
 		List<Class<?>> classesConfiguracao = this.obterClassesConfiguracaoDependencias();
 		this.verificarClassesObtidas(classesConfiguracao);
 		Map<Class<?>, Method> metodosConfiguracao = this.obterMetodosConfiguracaoDependencias(classesConfiguracao);
@@ -111,12 +100,9 @@ public class GerenteDeConfiguracoesDeDependencias {
 	 * projeto.
 	 *
 	 * @return Lista com todas as classes de configuração do projeto.
-	 * @throws PacoteInexistenteException Ocorrerá se o pacote do projeto não
-	 *                                    existir no sistema de arquivos do sistema
-	 *                                    operacional.
 	 */
-	private List<Class<?>> obterClassesConfiguracaoDependencias() throws PacoteInexistenteException {
-		return this.manipuladorClassesConfiguracao.obterClassesDeConfiguracao();
+	private List<Class<?>> obterClassesConfiguracaoDependencias() {
+		return this.manipuladorClassesConfiguracao.obterClassesAnotadasComConfiguracaoDependencia();
 	}
 
 	/**
@@ -139,10 +125,6 @@ public class GerenteDeConfiguracoesDeDependencias {
 	 *
 	 * @param metodosConfiguracao Lista de métodos de configuração para serem
 	 *                            invocados
-	 * @throws PacoteInexistenteException                   Ocorrerá se o pacote do
-	 *                                                      projeto não existir no
-	 *                                                      sistema de arquivos do
-	 *                                                      sistema operacional.
 	 * @throws ConfiguracaoDependenciaInvalidaException     Ocorrerá caso a
 	 *                                                      configuração seja
 	 *                                                      inválida. Podendo ser a
@@ -156,8 +138,7 @@ public class GerenteDeConfiguracoesDeDependencias {
 	 *                                                      configuração.
 	 */
 	private void configurarObjetosConfiguracao(Map<Class<?>, Method> metodosConfiguracao)
-			throws PacoteInexistenteException, ConfiguracaoDependenciaInvalidaException,
-			ConfiguracaoDependenciaInterrompidaException {
+			throws ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		List<ConfiguracaoIoCBuilder> buildersConfigurados = this.manipuladorMetodosConfiguracao
 				.invocarMetodos(metodosConfiguracao);
 		for (ConfiguracaoIoCBuilder builderConfigurado : buildersConfigurados) {

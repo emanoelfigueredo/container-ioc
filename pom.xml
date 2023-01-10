@@ -32,9 +32,9 @@
 	</licenses>
 	<dependencies>
 		<dependency>
-			<groupId>com.github.emanoelfigueredo</groupId>
-			<artifactId>project-loader</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>

@@ -3,7 +3,7 @@ package br.com.efigueredo.container.configuracao;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
  * <h4>Classe que representa a configuração utilizada pelo container IOC para

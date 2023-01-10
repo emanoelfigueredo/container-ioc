@@ -14,7 +14,6 @@ import br.com.efigueredo.container.objetos.InstanciadorDeObjetos;
 import br.com.efigueredo.container.objetos.verificacao.VerificacaoLoopInjecao;
 import br.com.efigueredo.container.objetos.verificacao.VerificadorDeConstrutores;
 import br.com.efigueredo.container.obtencao_configuracao.GerenteDeObtencaoDeClassesConfiguradas;
-import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
 /**
  * <h4>Classe responsável por instânciar objetos pela sua classe.</h4>
@@ -26,6 +25,8 @@ import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteExcep
  * @since 1.0.0
  */
 public class ContainerIoc {
+	
+	private static String pacoteRaiz;
 
 	/** Objeto responsável por instânciar os objetos pelos seus construtores. */
 	private InstanciadorDeObjetos instanciador;
@@ -54,11 +55,18 @@ public class ContainerIoc {
 	 * @throws ContainerIocException      Ocorrerá se houver alguma falha na
 	 *                                    configuração de dependências ou
 	 *                                    instânciação do objeto.
-	 * @throws PacoteInexistenteException Ocorrerá se o pacote raiz do projeto não
+	 * @throws  Ocorrerá se o pacote raiz do projeto não
 	 *                                    for encontrado no sistema de arquivos do
 	 *                                    sistema operacional.
 	 */
-	public ContainerIoc() throws ContainerIocException, PacoteInexistenteException {
+	public ContainerIoc(String pacoteRaiz) throws ContainerIocException {
+		
+		
+		
+		
+
+		
+		ContainerIoc.pacoteRaiz = pacoteRaiz;
 		this.instanciador = new InstanciadorDeObjetos();
 		this.verificador = new VerificadorDeConstrutores();
 		this.configuracaoDependencias = new GerenteDeConfiguracoesDeDependencias().getConfiguracao();
@@ -70,11 +78,11 @@ public class ContainerIoc {
 	/**
 	 * Setup para as verificacoes de construtores.
 	 *
-	 * @throws PacoteInexistenteException Ocorrerá se o pacote raiz do projeto não
+	 * @throws  Ocorrerá se o pacote raiz do projeto não
 	 *                                    for encontrado no sistema de arquivos do
 	 *                                    sistema operacional.
 	 */
-	private void setupVerificacoes() throws PacoteInexistenteException {
+	private void setupVerificacoes() {
 		this.verificador.adicionarConfiguracao(new VerificacaoLoopInjecao());
 	}
 
@@ -153,6 +161,10 @@ public class ContainerIoc {
 	 */
 	private Class<?> obterConfiguracaoDeDependencia(Class<?> classe) throws ClasseIlegalParaIntanciaException {
 		return this.gerenteObtencaoConfiguracao.getClasseConfigurada(classe);
+	}
+
+	public static String getPacoteRaiz() {
+		return ContainerIoc.pacoteRaiz;
 	}
 
 }

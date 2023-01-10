@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+
+import br.com.efigueredo.container.ContainerIoc;
 import br.com.efigueredo.container.construtor.ManipuladorConstrutoresContainer;
 import br.com.efigueredo.container.exception.ContainerIocException;
 import br.com.efigueredo.container.exception.LoopDeInjecaoDependenciaException;
-import br.com.efigueredo.project_loader.projeto.ProjetoFactory;
-import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
 
 /**
  * <h4>Classe que representa a verificação de ocorrência de loop de injeção de
@@ -24,6 +26,8 @@ import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteExcep
  */
 public class VerificacaoLoopInjecao implements VerificacaoConstrutor {
 
+	private Reflections reflections;
+	
 	/**
 	 * As classes verificadas. Atrbuto será utilizado para a verificação em cadeia.
 	 */
@@ -45,9 +49,11 @@ public class VerificacaoLoopInjecao implements VerificacaoConstrutor {
 	 *                                    sistema de arquivos do sistema
 	 *                                    operacional.
 	 */
-	public VerificacaoLoopInjecao() throws PacoteInexistenteException {
+	public VerificacaoLoopInjecao() {
 		this.classesOcorrentes = new ArrayList<Class<?>>();
-		this.todasAsClassesDoProjeto = new ProjetoFactory().criarProjeto().getSRC_MAIN_JAVA().getClasses();
+		this.reflections = new Reflections(ContainerIoc.getPacoteRaiz(), new SubTypesScanner(false));
+		
+		this.todasAsClassesDoProjeto = this.reflections.getSubTypesOf(Object.class).stream().toList();
 	}
 
 	/**

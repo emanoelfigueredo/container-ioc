@@ -3,9 +3,12 @@ package br.com.efigueredo.container.construtor;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+
+import br.com.efigueredo.container.ContainerIoc;
 import br.com.efigueredo.container.anotacao.Injecao;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
-import br.com.efigueredo.project_loader.projeto.recursos.java.ManipuladorConstrutores;
 
 /**
  * <h4>Classe responsável por obter os construroes</h4>
@@ -21,9 +24,9 @@ public class ObtentorConstrutores {
 	 * @param classe A classe.
 	 * @return Lista de construtores anotados com @Injecao.
 	 */
-	public List<Constructor<?>> obterTodosOsConstrutoresAnotadosComInjecao(Class<?> classe) {
-		ManipuladorConstrutores manipuladorConstrutoresProjeto = new ManipuladorConstrutores(classe);
-		return manipuladorConstrutoresProjeto.buscarConstrutoresPorAnotacao(Injecao.class);
+	public List<Constructor> obterTodosOsConstrutoresAnotadosComInjecao(Class<?> classe) {
+		Reflections reflections = new Reflections(ContainerIoc.getPacoteRaiz(), new SubTypesScanner(false));
+		return reflections.getConstructorsAnnotatedWith(Injecao.class).stream().toList();
 	}
 
 	/**

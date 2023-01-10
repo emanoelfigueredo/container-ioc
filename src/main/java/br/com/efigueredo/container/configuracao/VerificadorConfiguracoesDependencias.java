@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
-import br.com.efigueredo.container.exception.HerancaConfiguracaoNaoIdentificadaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
+import br.com.efigueredo.container.configuracao.exception.HerancaConfiguracaoNaoIdentificadaException;
 
 /**
  * <h4>Classe responsável por disponibilizar verificações para as classes e

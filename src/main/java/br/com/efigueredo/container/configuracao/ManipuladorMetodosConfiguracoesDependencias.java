@@ -9,9 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
-import br.com.efigueredo.project_loader.projeto.exception.PacoteInexistenteException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInterrompidaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
 
 /**
  * <h4>Classe responsável por manipular os métodos de configuração das classes
@@ -55,9 +54,6 @@ public class ManipuladorMetodosConfiguracoesDependencias {
 	 *                       valores {@linkplain Method} representando o método de
 	 *                       configuração de cada classe.
 	 * @return Lista de objetos {@linkplain ConfiguracaoIoCBuilder} configurados.
-	 * @throws PacoteInexistenteException                   Ocorrerá caso o pacote
-	 *                                                      do projeto não exista no
-	 *                                                      sistema operaocial.
 	 * @throws ConfiguracaoDependenciaInvalidaException     Ocorrerá caso a
 	 *                                                      configuração seja
 	 *                                                      inválida. Podendo ser a
@@ -70,8 +66,8 @@ public class ManipuladorMetodosConfiguracoesDependencias {
 	 *                                                      erro de reflexão na
 	 *                                                      configuração.
 	 */
-	List<ConfiguracaoIoCBuilder> invocarMetodos(Map<Class<?>, Method> classesMetodos) throws PacoteInexistenteException,
-			ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
+	List<ConfiguracaoIoCBuilder> invocarMetodos(Map<Class<?>, Method> classesMetodos)
+			throws ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
 		Set<Class<?>> classes = classesMetodos.keySet();
 		List<ConfiguracaoIoCBuilder> buildersConfigurados = new ArrayList<ConfiguracaoIoCBuilder>();
 		for (Class<?> classe : classes) {
@@ -106,7 +102,7 @@ public class ManipuladorMetodosConfiguracoesDependencias {
 			return builder;
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException
 				| NoSuchMethodException | SecurityException e) {
-			throw new ConfiguracaoDependenciaInterrompidaException(e.getCause());
+			throw new ConfiguracaoDependenciaInterrompidaException(e);
 		}
 	}
 
