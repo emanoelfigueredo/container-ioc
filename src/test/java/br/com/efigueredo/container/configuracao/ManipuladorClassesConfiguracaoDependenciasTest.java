@@ -11,11 +11,11 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 import br.com.efigueredo.container.exception.ContainerIocException;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorreta.ClasseConfiguracaoComConfiguracaoCorreta;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorretaSemConfiguracao.ClasseConfiguracaoCorretaSemConfiguracao;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoIncorretaImplementacao.ClasseConfiguracaoComConfiguracaoIncorretaImplementacao;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoIncorretaValorInterface.ClasseConfiguracaoComConfiguracaoIncorretaValorInterface;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoSemHerancaClasseConfigura.ClasseConfiguracaoSemSuperClasseConfiguracaoDependenciaIoC;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorreta.Configuracao1;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorretaSemConfiguracao.Configuracao2;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoIncorretaImplementacao.Configuracao3;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoIncorretaValorInterface.Configuracao4;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoSemHerancaClasseConfigura.Configuracao5;
 
 @Tag("unitaruio")
 class ManipuladorClassesConfiguracaoDependenciasTest {
@@ -32,11 +32,11 @@ class ManipuladorClassesConfiguracaoDependenciasTest {
 		this.setUp("br.com.efigueredo.container.prototipos_com_configuracoes");
 		List<Class<?>> classesConfiguracao = this.manipulador.obterClassesAnotadasComConfiguracaoDependencia();
 		assertTrue(classesConfiguracao.size() == 5);
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoCorretaSemConfiguracao.class));
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoComConfiguracaoCorreta.class));
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoComConfiguracaoIncorretaImplementacao.class));
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoComConfiguracaoIncorretaValorInterface.class));
-		assertTrue(classesConfiguracao.contains(ClasseConfiguracaoSemSuperClasseConfiguracaoDependenciaIoC.class));
+		assertTrue(classesConfiguracao.contains(Configuracao1.class));
+		assertTrue(classesConfiguracao.contains(Configuracao2.class));
+		assertTrue(classesConfiguracao.contains(Configuracao3.class));
+		assertTrue(classesConfiguracao.contains(Configuracao4.class));
+		assertTrue(classesConfiguracao.contains(Configuracao5.class));
 	}
 
 	@Test

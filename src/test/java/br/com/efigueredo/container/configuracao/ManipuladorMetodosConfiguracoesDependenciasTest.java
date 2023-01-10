@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
 import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInterrompidaException;
 import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorreta.ClasseConfiguracaoComConfiguracaoCorreta;
-import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorretaSemConfiguracao.ClasseConfiguracaoCorretaSemConfiguracao;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorreta.Configuracao1;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorretaSemConfiguracao.Configuracao2;
 
 @Tag("unitario")
 class ManipuladorMetodosConfiguracoesDependenciasTest {
@@ -31,26 +31,26 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 	@Test
 	public void deveriaRetornarUmMapa_OndeSoTemUmElemento_ChaveAClasseDeConfiguracao_ValorSeuMetodoDeConfiguracao()
 			throws NoSuchMethodException, SecurityException {
-		List<Class<?>> listaClassesConfiguracao = Arrays.asList(ClasseConfiguracaoComConfiguracaoCorreta.class);
+		List<Class<?>> listaClassesConfiguracao = Arrays.asList(Configuracao1.class);
 		Map<Class<?>, Method> metodosConfiguracao = this.manipulador.getMetodosConfiguracao(listaClassesConfiguracao);
 		assertTrue(metodosConfiguracao.size() == 1);
-		assertTrue(metodosConfiguracao.containsKey(ClasseConfiguracaoComConfiguracaoCorreta.class));
-		assertTrue(metodosConfiguracao.containsValue(ClasseConfiguracaoComConfiguracaoCorreta.class
+		assertTrue(metodosConfiguracao.containsKey(Configuracao1.class));
+		assertTrue(metodosConfiguracao.containsValue(Configuracao1.class
 				.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
 	}
 
 	@Test
 	public void deveriaRetornarUmMapa_OndeExistemDoisElementos_ChaveAClasseDeConfiguracao_ValorSeuMetodoDeConfiguracao()
 			throws NoSuchMethodException, SecurityException {
-		List<Class<?>> listaClassesConfiguracao = Arrays.asList(ClasseConfiguracaoComConfiguracaoCorreta.class,
-				ClasseConfiguracaoCorretaSemConfiguracao.class);
+		List<Class<?>> listaClassesConfiguracao = Arrays.asList(Configuracao1.class,
+				Configuracao2.class);
 		Map<Class<?>, Method> metodosConfiguracao = this.manipulador.getMetodosConfiguracao(listaClassesConfiguracao);
 		assertTrue(metodosConfiguracao.size() == 2);
-		assertTrue(metodosConfiguracao.containsKey(ClasseConfiguracaoComConfiguracaoCorreta.class));
-		assertTrue(metodosConfiguracao.containsValue(ClasseConfiguracaoComConfiguracaoCorreta.class
+		assertTrue(metodosConfiguracao.containsKey(Configuracao1.class));
+		assertTrue(metodosConfiguracao.containsValue(Configuracao1.class
 				.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
-		assertTrue(metodosConfiguracao.containsKey(ClasseConfiguracaoCorretaSemConfiguracao.class));
-		assertTrue(metodosConfiguracao.containsValue(ClasseConfiguracaoCorretaSemConfiguracao.class
+		assertTrue(metodosConfiguracao.containsKey(Configuracao2.class));
+		assertTrue(metodosConfiguracao.containsValue(Configuracao2.class
 				.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
 	}
 
@@ -66,13 +66,13 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 			throws NoSuchMethodException, SecurityException, ConfiguracaoDependenciaInvalidaException,
 			ConfiguracaoDependenciaInterrompidaException {
 		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
-		Method metodoConfiguracao1 = ClasseConfiguracaoCorretaSemConfiguracao.class.getMethod("configuracao",
+		Method metodoConfiguracao1 = Configuracao2.class.getMethod("configuracao",
 				InterfaceConfiguracaoIoCBuilder.class);
-		Method metodoConfiguracao2 = ClasseConfiguracaoComConfiguracaoCorreta.class.getMethod("configuracao",
+		Method metodoConfiguracao2 = Configuracao1.class.getMethod("configuracao",
 				InterfaceConfiguracaoIoCBuilder.class);
 
-		metodosConfiguracao.put(ClasseConfiguracaoCorretaSemConfiguracao.class, metodoConfiguracao1);
-		metodosConfiguracao.put(ClasseConfiguracaoComConfiguracaoCorreta.class, metodoConfiguracao2);
+		metodosConfiguracao.put(Configuracao2.class, metodoConfiguracao1);
+		metodosConfiguracao.put(Configuracao1.class, metodoConfiguracao2);
 
 		List<ConfiguracaoIoCBuilder> listaBuildersConfigurados = this.manipulador.invocarMetodos(metodosConfiguracao);
 		assertTrue(listaBuildersConfigurados.size() == 2);
