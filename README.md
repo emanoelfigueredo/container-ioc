@@ -52,7 +52,9 @@ Para utilizar a funcionalidade em construtores, utilize a anotação __@Injeçã
 
 > OBS: Se alguma das dependências for uma interface, é necessário configurá-la numa classes de configuração.
 
-Para obter os objetos, utilize o objeto __ContainerIoc__. O método responsável é __getIntancia()__.
+Para obter os objetos, utilize o objeto __ContainerIoc__. O método responsável é __getIntancia()__. Na instânciação do objeto __ContainerIoc__, insira o pacote raiz do projeto. No caso será [br.com.efigueredo.container].
+
+> OBS: Caso insira um pacote de menor hierarquia, corre o risco de nem todas as classes de seu projeto serem visualizadas pelo container ioc. Portanto, existe a possibilidade de alguma classe de configuração de dependências não ser encontrada.
 
 ~~~java
 import br.com.efigueredo.container.ContainerIoc;
@@ -64,7 +66,7 @@ public class Main {
 
 	public static void main(String[] args) throws PacoteInexistenteException, InversaoDeControleInvalidaException, ClasseIlegalParaIntanciaException {
 
-		ContainerIoc container = new ContainerIoc();
+		ContainerIoc container = new ContainerIoc("br.com.efigueredo.container");
 		Class<?> classeObjeto;
 		Object instancia = container.getIntancia(classeObjeto);
 		
