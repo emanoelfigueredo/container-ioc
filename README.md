@@ -279,6 +279,9 @@ true
 
 - Java 1.8
     - Reflection API
+    - Reflections
+    - JUnit
+    - Mockito
 
 <a id="licenca"></a>
 # Licença
