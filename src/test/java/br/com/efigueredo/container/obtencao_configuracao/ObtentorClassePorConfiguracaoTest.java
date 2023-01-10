@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
 
 class ObtentorClassePorConfiguracaoTest {
 	

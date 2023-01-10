@@ -7,25 +7,26 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
-import br.com.efigueredo.container.exception.ContainerIocException;
-import br.com.efigueredo.container.exception.LoopDeInjecaoDependenciaException;
-import br.com.efigueredo.container.objetos.verificacao.prototipos.ClasseInjecaoLoopPrototipo1;
-import br.com.efigueredo.container.objetos.verificacao.prototipos.ClasseInjecaoLoopPrototipo2;
-import br.com.efigueredo.container.objetos.verificacao.prototipos.ClasseInjecaoNormalPrototipo;
-import br.com.efigueredo.container.objetos.verificacao.prototipos.ClasseInjecaoNormalPrototipo2;
+import br.com.efigueredo.container.objetos.verificacao.exception.LoopDeInjecaoDependenciaException;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseInjecaoLoopPrototipo1;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseInjecaoLoopPrototipo2;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseInjecaoNormalPrototipo;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseInjecaoNormalPrototipo2;
 
 @Tag("integrado")
 class VerificacaoLoopInjecaoTest {
 
 	private VerificacaoLoopInjecao verificacao;
 
-	@BeforeEach
-	void setUp() throws Exception {
-		this.verificacao = new VerificacaoLoopInjecao();
+	void setUp(String pacotePrototipo) throws Exception {
+		Reflections reflections = new Reflections(pacotePrototipo, new TypeAnnotationsScanner(), new SubTypesScanner(false));
+		this.verificacao = new VerificacaoLoopInjecao(reflections);
 		List<Class<? extends Object>> listaClasses = Arrays.asList(ClasseInjecaoNormalPrototipo.class, ClasseInjecaoNormalPrototipo2.class,
 				ClasseInjecaoLoopPrototipo1.class, ClasseInjecaoLoopPrototipo2.class);
 		this.verificacao.setTodasAsClassesDoProjeto(listaClasses);
@@ -44,13 +45,15 @@ class VerificacaoLoopInjecaoTest {
 	 */
 	
 	@Test
-	void deveriaLancarExcecaoLoopDeInjecao_QuandoForInseridoConstrutorQuePodeGerarLoopDeInjecao() throws ContainerIocException, NoSuchMethodException, SecurityException {
+	void deveriaLancarExcecaoLoopDeInjecao_QuandoForInseridoConstrutorQuePodeGerarLoopDeInjecao() throws Exception {
+		this.setUp("br.com.efigueredo.container.prototipos_sem_configuracoes");
 		Constructor<ClasseInjecaoLoopPrototipo1> construtorLoop = ClasseInjecaoLoopPrototipo1.class.getDeclaredConstructor(ClasseInjecaoLoopPrototipo2.class);
 		assertThrows(LoopDeInjecaoDependenciaException.class, () -> this.verificacao.verificar(construtorLoop));
 	}
 	
 	@Test
-	void naoDeveriaLancarExcecao_QunadoForInseridoConstrutorQueNaoGeraLoopDeInjecao() throws ContainerIocException, NoSuchMethodException, SecurityException {
+	void naoDeveriaLancarExcecao_QunadoForInseridoConstrutorQueNaoGeraLoopDeInjecao() throws Exception {
+		this.setUp("br.com.efigueredo.container.prototipos_sem_configuracoes");
 		Constructor<ClasseInjecaoNormalPrototipo> construtorSemLoop = ClasseInjecaoNormalPrototipo.class.getDeclaredConstructor(ClasseInjecaoNormalPrototipo2.class);
 		assertDoesNotThrow(() -> this.verificacao.verificar(construtorSemLoop));
 	}

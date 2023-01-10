@@ -4,7 +4,7 @@
 	<artifactId>container-ioc</artifactId>
 	<version>1.0.0</version>
 	<name>Container IOC</name>
-	<description>Biblioteca para implementar a inversão de controle e injeção de dependências.</description>
+	<description>Biblioteca para implementar inversão de controle e injeção de dependências.</description>
 	<distributionManagement>
 		<repository>
 			<id>github</id>

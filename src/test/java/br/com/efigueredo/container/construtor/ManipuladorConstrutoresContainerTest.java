@@ -15,12 +15,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import br.com.efigueredo.container.anotacao.Injecao;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
-import br.com.efigueredo.container.construtor.prototipo.ClasseDuploConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipo.ClasseSemConstrutorValido;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
-import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.construtor.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorAnotado;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorPadraoPrototipo;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseDuploConstrutorAnotado;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseSemConstrutorValido;
 
 @Tag("unitario")
 class ManipuladorConstrutoresContainerTest {

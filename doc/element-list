@@ -1,11 +1,12 @@
 br.com.efigueredo.container
 br.com.efigueredo.container.anotacao
 br.com.efigueredo.container.configuracao
-br.com.efigueredo.container.configuracao.prototipos
+br.com.efigueredo.container.configuracao.exception
 br.com.efigueredo.container.construtor
-br.com.efigueredo.container.construtor.prototipo
+br.com.efigueredo.container.construtor.exception
 br.com.efigueredo.container.exception
 br.com.efigueredo.container.objetos
+br.com.efigueredo.container.objetos.exception
 br.com.efigueredo.container.objetos.verificacao
-br.com.efigueredo.container.objetos.verificacao.prototipos
+br.com.efigueredo.container.objetos.verificacao.exception
 br.com.efigueredo.container.obtencao_configuracao

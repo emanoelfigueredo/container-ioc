@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import br.com.efigueredo.container.anotacao.Injecao;
-import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.construtor.exception.InversaoDeControleInvalidaException;
 
 /**
  * <h4>Classe responsável por obter os construroes</h4>

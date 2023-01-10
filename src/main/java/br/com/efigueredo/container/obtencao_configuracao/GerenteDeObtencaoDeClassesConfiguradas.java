@@ -1,7 +1,7 @@
 package br.com.efigueredo.container.obtencao_configuracao;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
 
 /**
  * <h4>Classe responsável por gerenciar os recursos para a obteção de uma

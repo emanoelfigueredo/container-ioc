@@ -6,12 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 
-import br.com.efigueredo.container.ContainerIoc;
 import br.com.efigueredo.container.construtor.ManipuladorConstrutoresContainer;
 import br.com.efigueredo.container.exception.ContainerIocException;
-import br.com.efigueredo.container.exception.LoopDeInjecaoDependenciaException;
+import br.com.efigueredo.container.objetos.verificacao.exception.LoopDeInjecaoDependenciaException;
 
 /**
  * <h4>Classe que representa a verificação de ocorrência de loop de injeção de
@@ -26,6 +24,7 @@ import br.com.efigueredo.container.exception.LoopDeInjecaoDependenciaException;
  */
 public class VerificacaoLoopInjecao implements VerificacaoConstrutor {
 
+	/** Objeto responsável pela reflexão do projeto. */
 	private Reflections reflections;
 	
 	/**
@@ -45,14 +44,11 @@ public class VerificacaoLoopInjecao implements VerificacaoConstrutor {
 	 * Obtém todas as clases do sistema e atribui ao atributo
 	 * {@code todasAsClassesDoProjeto}.
 	 *
-	 * @throws PacoteInexistenteException Ocorrerá se o pacote raiz não existir no
-	 *                                    sistema de arquivos do sistema
-	 *                                    operacional.
+	 * @param reflections Objeto responsável pela reflexão do projeto.
 	 */
-	public VerificacaoLoopInjecao() {
+	public VerificacaoLoopInjecao(Reflections reflections) {
 		this.classesOcorrentes = new ArrayList<Class<?>>();
-		this.reflections = new Reflections(ContainerIoc.getPacoteRaiz(), new SubTypesScanner(false));
-		
+		this.reflections = reflections;
 		this.todasAsClassesDoProjeto = this.reflections.getSubTypesOf(Object.class).stream().toList();
 	}
 

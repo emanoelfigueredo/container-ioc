@@ -8,11 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrivadoPrototipo;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorParametrosPrivadooPrototipo;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorParametrosPublicoPrototipo;
-import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
+import br.com.efigueredo.container.objetos.exception.InstanciacaoObjetoInterrompidaException;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorPadraoPrivadoPrototipo;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorPadraoPrototipo;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorParametrosPrivadooPrototipo;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorParametrosPublicoPrototipo;
 
 @Tag("unitario")
 class InstanciadorDeObjetosTest {

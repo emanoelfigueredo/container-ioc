@@ -12,9 +12,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import br.com.efigueredo.container.ContainerIoc;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
 import br.com.efigueredo.container.exception.ContainerIocException;
-import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.objetos.exception.InstanciacaoObjetoInterrompidaException;
 
 class GerenteDeIntanciacaoDosParametrosTest {
 	

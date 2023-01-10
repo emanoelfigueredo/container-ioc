@@ -3,16 +3,16 @@ package br.com.efigueredo.container.obtencao_configuracao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
 
 @Tag("integracao")
 class GerenteDeObtencaoDeClassesConfiguradasTest {

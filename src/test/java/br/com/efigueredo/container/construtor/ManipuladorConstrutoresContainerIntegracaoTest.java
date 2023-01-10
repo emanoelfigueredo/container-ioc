@@ -9,12 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipo.ClasseConstrutorPadraoPrototipo;
-import br.com.efigueredo.container.construtor.prototipo.ClasseDuploConstrutorAnotado;
-import br.com.efigueredo.container.construtor.prototipo.ClasseSemConstrutorValido;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
-import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.construtor.exception.InversaoDeControleInvalidaException;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorAnotado;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConstrutorPadraoPrototipo;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseDuploConstrutorAnotado;
+import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseSemConstrutorValido;
 
 /*
  * Para realizar os testes de integração dessa classe, copie o pacote prototipo
@@ -26,7 +26,8 @@ public class ManipuladorConstrutoresContainerIntegracaoTest {
 	private ManipuladorConstrutoresContainer manipuladorConstrutoresContainer;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() throws Exception 
+	{
 		this.manipuladorConstrutoresContainer = new ManipuladorConstrutoresContainer();
 	}
 

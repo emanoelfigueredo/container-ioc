@@ -2,15 +2,19 @@ package br.com.efigueredo.container;
 
 import java.lang.reflect.Constructor;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC;
 import br.com.efigueredo.container.configuracao.GerenteDeConfiguracoesDeDependencias;
 import br.com.efigueredo.container.construtor.ManipuladorConstrutoresContainer;
-import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.construtor.exception.InversaoDeControleInvalidaException;
 import br.com.efigueredo.container.exception.ContainerIocException;
-import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
-import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
 import br.com.efigueredo.container.objetos.GerenteDeIntanciacaoDosParametros;
 import br.com.efigueredo.container.objetos.InstanciadorDeObjetos;
+import br.com.efigueredo.container.objetos.exception.ClasseIlegalParaIntanciaException;
+import br.com.efigueredo.container.objetos.exception.InstanciacaoObjetoInterrompidaException;
 import br.com.efigueredo.container.objetos.verificacao.VerificacaoLoopInjecao;
 import br.com.efigueredo.container.objetos.verificacao.VerificadorDeConstrutores;
 import br.com.efigueredo.container.obtencao_configuracao.GerenteDeObtencaoDeClassesConfiguradas;
@@ -25,8 +29,6 @@ import br.com.efigueredo.container.obtencao_configuracao.GerenteDeObtencaoDeClas
  * @since 1.0.0
  */
 public class ContainerIoc {
-	
-	private static String pacoteRaiz;
 
 	/** Objeto responsável por instânciar os objetos pelos seus construtores. */
 	private InstanciadorDeObjetos instanciador;
@@ -52,38 +54,27 @@ public class ContainerIoc {
 	/**
 	 * Construtor.
 	 *
-	 * @throws ContainerIocException      Ocorrerá se houver alguma falha na
-	 *                                    configuração de dependências ou
-	 *                                    instânciação do objeto.
-	 * @throws  Ocorrerá se o pacote raiz do projeto não
-	 *                                    for encontrado no sistema de arquivos do
-	 *                                    sistema operacional.
+	 * @param pacoteRaiz O pacote raiz do projeto.
+	 * @throws ContainerIocException Ocorrerá se houver alguma falha na configuração
+	 *                               de dependências ou instânciação do objeto.
 	 */
 	public ContainerIoc(String pacoteRaiz) throws ContainerIocException {
-		
-		
-		
-		
-
-		
-		ContainerIoc.pacoteRaiz = pacoteRaiz;
-		this.instanciador = new InstanciadorDeObjetos();
-		this.verificador = new VerificadorDeConstrutores();
-		this.configuracaoDependencias = new GerenteDeConfiguracoesDeDependencias().getConfiguracao();
-		this.gerenteObtencaoConfiguracao = new GerenteDeObtencaoDeClassesConfiguradas(this.configuracaoDependencias);
-		this.gerenteInstanciasParametros = new GerenteDeIntanciacaoDosParametros(this);
-		this.setupVerificacoes();
+		Reflections reflections = new Reflections(pacoteRaiz, new TypeAnnotationsScanner(), new SubTypesScanner(false));
+		this.instanciador 					= new InstanciadorDeObjetos();
+		this.verificador 					= new VerificadorDeConstrutores();
+		this.configuracaoDependencias 		= new GerenteDeConfiguracoesDeDependencias(reflections).getConfiguracao();
+		this.gerenteObtencaoConfiguracao 	= new GerenteDeObtencaoDeClassesConfiguradas(this.configuracaoDependencias);
+		this.gerenteInstanciasParametros 	= new GerenteDeIntanciacaoDosParametros(this);
+		this.setupVerificacoes(reflections);
 	}
 
 	/**
 	 * Setup para as verificacoes de construtores.
 	 *
-	 * @throws  Ocorrerá se o pacote raiz do projeto não
-	 *                                    for encontrado no sistema de arquivos do
-	 *                                    sistema operacional.
+	 * @param reflections Objeto responsável pela reflexão do projeto.
 	 */
-	private void setupVerificacoes() {
-		this.verificador.adicionarConfiguracao(new VerificacaoLoopInjecao());
+	private void setupVerificacoes(Reflections reflections) {
+		this.verificador.adicionarConfiguracao(new VerificacaoLoopInjecao(reflections));
 	}
 
 	/**
@@ -161,10 +152,6 @@ public class ContainerIoc {
 	 */
 	private Class<?> obterConfiguracaoDeDependencia(Class<?> classe) throws ClasseIlegalParaIntanciaException {
 		return this.gerenteObtencaoConfiguracao.getClasseConfigurada(classe);
-	}
-
-	public static String getPacoteRaiz() {
-		return ContainerIoc.pacoteRaiz;
 	}
 
 }

@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import br.com.efigueredo.container.ContainerIoc;
-import br.com.efigueredo.container.exception.InstanciacaoObjetoInterrompidaException;
+import br.com.efigueredo.container.objetos.exception.InstanciacaoObjetoInterrompidaException;
 
 /**
  * <h4>Classe responsável por instânciar os objetos requeridos pelo
