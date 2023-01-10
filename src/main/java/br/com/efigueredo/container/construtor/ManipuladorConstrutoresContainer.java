@@ -43,7 +43,7 @@ public class ManipuladorConstrutoresContainer {
 	 *                                             nem o padrão.
 	 */
 	public Constructor<?> getConstrutorAdequado(Class<?> classe) throws InversaoDeControleInvalidaException {
-		List<Constructor> construtoresAnotados = this.obtentor.obterTodosOsConstrutoresAnotadosComInjecao(classe);
+		List<Constructor<?>> construtoresAnotados = this.obtentor.obterTodosOsConstrutoresAnotadosComInjecao(classe);
 		this.verificador.verificarSeExisteMaisDeUmConstrutorAnotado(construtoresAnotados, classe);
 		return this.obterConstrutorAdequado(construtoresAnotados, classe);
 	}
@@ -62,7 +62,7 @@ public class ManipuladorConstrutoresContainer {
 	 * @throws InversaoDeControleInvalidaException Ocorerá se não houver construtor
 	 *                                             padrão na classe.
 	 */
-	private Constructor<?> obterConstrutorAdequado(List<Constructor> construtoresAnotados, Class<?> classe)
+	private Constructor<?> obterConstrutorAdequado(List<Constructor<?>> construtoresAnotados, Class<?> classe)
 			throws InversaoDeControleInvalidaException {
 		if (construtoresAnotados == null) {
 			return this.obtentor.getConstrutorPadrao(classe);
@@ -77,7 +77,7 @@ public class ManipuladorConstrutoresContainer {
 	 * @param construtoresAnotados Lista de construtores anotados com @Injecao.
 	 * @return O construtor adequando.
 	 */
-	private Constructor<?> getConstrutorAnotado(List<Constructor> construtoresAnotados) {
+	private Constructor<?> getConstrutorAnotado(List<Constructor<?>> construtoresAnotados) {
 		return construtoresAnotados.get(0);
 	}
 

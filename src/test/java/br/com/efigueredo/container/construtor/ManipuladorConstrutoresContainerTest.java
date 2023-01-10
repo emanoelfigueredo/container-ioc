@@ -21,7 +21,6 @@ import br.com.efigueredo.container.construtor.prototipo.ClasseDuploConstrutorAno
 import br.com.efigueredo.container.construtor.prototipo.ClasseSemConstrutorValido;
 import br.com.efigueredo.container.exception.ClasseIlegalParaIntanciaException;
 import br.com.efigueredo.container.exception.InversaoDeControleInvalidaException;
-import br.com.efigueredo.project_loader.projeto.recursos.java.ManipuladorConstrutores;
 
 @Tag("unitario")
 class ManipuladorConstrutoresContainerTest {

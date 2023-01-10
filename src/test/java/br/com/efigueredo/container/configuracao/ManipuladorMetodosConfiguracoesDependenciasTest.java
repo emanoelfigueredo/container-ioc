@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import br.com.efigueredo.container.configuracao.ConfiguracaoIoC.ConfiguracaoIoCBuilder;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInterrompidaException;
-import br.com.efigueredo.container.exception.ConfiguracaoDependenciaInvalidaException;
-import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConfiguracaoComConfiguracaoCorreta;
-import br.com.efigueredo.container.prototipos_com_configuracoes.ClasseConfiguracaoCorretaSemConfiguracao;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInterrompidaException;
+import br.com.efigueredo.container.configuracao.exception.ConfiguracaoDependenciaInvalidaException;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorreta.ClasseConfiguracaoComConfiguracaoCorreta;
+import br.com.efigueredo.container.prototipos_com_configuracoes.configuracaoCorretaSemConfiguracao.ClasseConfiguracaoCorretaSemConfiguracao;
 
 @Tag("unitario")
 class ManipuladorMetodosConfiguracoesDependenciasTest {
@@ -35,8 +35,8 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 		Map<Class<?>, Method> metodosConfiguracao = this.manipulador.getMetodosConfiguracao(listaClassesConfiguracao);
 		assertTrue(metodosConfiguracao.size() == 1);
 		assertTrue(metodosConfiguracao.containsKey(ClasseConfiguracaoComConfiguracaoCorreta.class));
-		assertTrue(metodosConfiguracao.containsValue(
-				ClasseConfiguracaoComConfiguracaoCorreta.class.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
+		assertTrue(metodosConfiguracao.containsValue(ClasseConfiguracaoComConfiguracaoCorreta.class
+				.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
 	}
 
 	@Test
@@ -47,11 +47,11 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 		Map<Class<?>, Method> metodosConfiguracao = this.manipulador.getMetodosConfiguracao(listaClassesConfiguracao);
 		assertTrue(metodosConfiguracao.size() == 2);
 		assertTrue(metodosConfiguracao.containsKey(ClasseConfiguracaoComConfiguracaoCorreta.class));
-		assertTrue(metodosConfiguracao.containsValue(
-				ClasseConfiguracaoComConfiguracaoCorreta.class.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
+		assertTrue(metodosConfiguracao.containsValue(ClasseConfiguracaoComConfiguracaoCorreta.class
+				.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
 		assertTrue(metodosConfiguracao.containsKey(ClasseConfiguracaoCorretaSemConfiguracao.class));
-		assertTrue(metodosConfiguracao.containsValue(
-				ClasseConfiguracaoCorretaSemConfiguracao.class.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
+		assertTrue(metodosConfiguracao.containsValue(ClasseConfiguracaoCorretaSemConfiguracao.class
+				.getMethod("configuracao", InterfaceConfiguracaoIoCBuilder.class)));
 	}
 
 	/*
@@ -63,8 +63,8 @@ class ManipuladorMetodosConfiguracoesDependenciasTest {
 
 	@Test
 	public void deveriaRetornarUmBuilderConfigurado_QuandoInvocarOsMetodosDeConfiguracoes()
-			throws NoSuchMethodException, SecurityException,
-			ConfiguracaoDependenciaInvalidaException, ConfiguracaoDependenciaInterrompidaException {
+			throws NoSuchMethodException, SecurityException, ConfiguracaoDependenciaInvalidaException,
+			ConfiguracaoDependenciaInterrompidaException {
 		Map<Class<?>, Method> metodosConfiguracao = new HashMap<>();
 		Method metodoConfiguracao1 = ClasseConfiguracaoCorretaSemConfiguracao.class.getMethod("configuracao",
 				InterfaceConfiguracaoIoCBuilder.class);
